@@ -124,22 +124,18 @@
         <div class="container main-body">
             <div class="content-grid">
                 
-                <!-- KOLOM KIRI: DAFTAR NASKAH -->
                 <main class="col-main">
                     <div class="section-header">
                         :: Daftar Naskah &amp; Kajian Terbaru
                     </div>
 
                     <div id="articleContainer">
-                        <div class="empty-state">
-                            Memuat daftar naskah dari repositori...
-                        </div>
+                        <div class="empty-state">Memuat daftar naskah dari repositori...</div>
                     </div>
 
                     <div id="paginationContainer" style="display: none;"></div>
                 </main>
 
-                <!-- KOLOM KANAN: SIDEBAR WIDGETS -->
                 <aside class="col-sidebar">
                     <div class="sidebar-widget">
                         <div class="section-header" style="margin-bottom: 0;">:: Pencarian Arsip</div>
@@ -155,7 +151,7 @@
                     <div class="sidebar-widget">
                         <div class="section-header" style="margin-bottom: 0;">:: Indeks Bidang Kajian</div>
                         <div class="sidebar-widget-content">
-                            <ul class="category-list" id="categoryFilterList">
+                            <ul class="category-list">
                                 <li><a href="#" onclick="filterCategory('ALL'); return false;">Semua Bidang Kajian</a></li>
                                 <li><a href="#" onclick="filterCategory('Filsafat & Epistemologi'); return false;">Filsafat &amp; Epistemologi</a></li>
                                 <li><a href="#" onclick="filterCategory('Ekonomi Politik'); return false;">Ekonomi Politik</a></li>
@@ -215,31 +211,15 @@
     </div>
 
     <script>
-        // GANTI DENGAN DATA JSONBIN ANDA AGAR LIKE & KOMENTAR MUNCUL DI SEMUA HP
-        const JSONBIN_BIN_ID = '6afaf531ac6210605a8bbfca';
-        const JSONBIN_API_KEY = '$2a$10$4w2RV1J/BXb4Lqg06V/Nx.3OaNi2Qk5GKWP/JU3O1dE1BY4kHXuxy';
+        const SPREADSHEET_URL = 'https://script.google.com/macros/s/AKfycbz3PBwqo4bDdPbe1ISk54sJ4bscNTtQt7sbJ32EhvP1DAHH1Ru0yGfZpGAzO9Ko6jeoZA/exec';
 
         let articlesPerPage = 5;
         let currentPage = 1;
         let allArticles = [];
         let filteredArticles = [];
-        let cloudInteractions = {};
-
-        async function loadCloudInteractions() {
-            if (JSONBIN_BIN_ID === '6afaf531ac6210605a8bbfca') return;
-            try {
-                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    cloudInteractions = data.record || {};
-                }
-            } catch (e) {}
-        }
+        let statsCache = {};
 
         async function loadArticles() {
-            await loadCloudInteractions();
             try {
                 let response = await fetch('/posts.json?' + new Date().getTime());
                 if (!response.ok) throw new Error('Kosong');
@@ -248,9 +228,25 @@
                 filteredArticles = [...allArticles];
                 
                 document.getElementById('statTotal').innerText = allArticles.length;
+
+                // Ambil data like & komentar dari Google Sheets secara paralel agar cepat
+                await Promise.all(allArticles.map(async (art) => {
+                    try {
+                        let res = await fetch(`${SPREADSHEET_URL}?slug=${art.slug}`);
+                        if (res.ok) {
+                            let json = await res.json();
+                            let totalC = (json.comments || []).length;
+                            (json.comments || []).forEach(c => { if (c.replies) totalC += c.replies.length; });
+                            statsCache[art.slug] = { likes: json.likes || 0, comments: totalC };
+                        }
+                    } catch(e) {
+                        statsCache[art.slug] = { likes: 0, comments: 0 };
+                    }
+                }));
+
                 renderPage(currentPage);
             } catch (err) {
-                document.getElementById('articleContainer').innerHTML = `<div class="empty-state">Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.</div>`;
+                document.getElementById('articleContainer').innerHTML = `<div class="empty-state">Belum ada naskah yang diarsipkan dalam repositori ini.</div>`;
             }
         }
 
@@ -294,12 +290,7 @@
 
             let html = '';
             paginatedItems.forEach(art => {
-                // Ambil jumlah like & komentar dari cloud (fallback ke localStorage jika offline)
-                const postInteract = cloudInteractions[art.slug] || { likes: 0, comments: [] };
-                let totalComments = (postInteract.comments || []).length;
-                (postInteract.comments || []).forEach(c => {
-                    if (c.replies) totalComments += c.replies.length;
-                });
+                let st = statsCache[art.slug] || { likes: 0, comments: 0 };
 
                 html += `
                     <article class="article-item">
@@ -313,7 +304,7 @@
                         <div class="article-footer-links">
                             <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
                             <div style="color: #444444; font-weight: bold;">
-                                ${postInteract.likes || 0} Suka &nbsp;&bull;&nbsp; ${totalComments} Tanggapan
+                                👍 ${st.likes} Suka &nbsp;&bull;&nbsp; 💬 ${st.comments} Tanggapan
                             </div>
                         </div>
                     </article>
