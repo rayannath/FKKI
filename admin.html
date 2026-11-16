@@ -38,8 +38,9 @@
 
     <div class="site-wrapper">
         <header class="masthead">
-            <div class="container">
-                <h1>FKKI — PANEL ADMINISTRASI &amp; REDAKSI</h1>
+            <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+                <h1>FKKI — PANEL ADMINISTRASI &amp; REDAKSI (PRIVATE)</h1>
+                <a href="/index.html" style="color:#ffdf73; font-size:12px; font-weight:bold;">[Lihat Website Utama &rarr;]</a>
             </div>
         </header>
 
@@ -48,7 +49,7 @@
             <!-- FORM LOGIN / OTORISASI GITHUB -->
             <div id="auth-section" class="admin-box">
                 <h3 style="margin-top: 0; color: #1b365d; font-size: 14px;">:: Otorisasi GitHub Repository</h3>
-                <p style="font-size: 12px; color: #555;">Masukkan kredensial akun GitHub Anda agar admin panel dapat melakukan CRUD langsung ke repositori secara otomatis.</p>
+                <p style="font-size: 12px; color: #555;">Hanya pemilik repositori yang memiliki token akses yang dapat masuk ke halaman ini.</p>
                 <div class="form-group">
                     <label>Username GitHub (Owner)</label>
                     <input type="text" id="gh-owner" placeholder="contoh: rayan-dev">
@@ -130,6 +131,10 @@
     </div>
 
     <script>
+        // GANTI DENGAN DATA JSONBIN YANG SAMA DENGAN INDEX.HTML
+        const JSONBIN_BIN_ID = 'MASUKKAN_BIN_ID_ANDA';
+        const JSONBIN_API_KEY = 'MASUKKAN_X_MASTER_KEY_ANDA';
+
         let globalPostsCache = [];
 
         function toBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
@@ -181,7 +186,7 @@
             const owner = localStorage.getItem('fkki_owner');
             const repo = localStorage.getItem('fkki_repo');
             const token = localStorage.getItem('fkki_token');
-            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}?t=${Date.now()}`, {
                 method,
                 headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
                 ...(body && { body: JSON.stringify(body) })
@@ -193,7 +198,7 @@
             return res;
         }
 
-        // Template Halaman Detail Artikel (judul-tulisan.html) Dilengkapi Fitur Like & Komentar Publik
+        // Template Halaman Detail Artikel (Header 100% IDENTIK dengan index.html)
         function generateArticleHTML(post) {
             const formattedContent = post.content.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
             return `<!DOCTYPE html>
@@ -204,57 +209,93 @@
     <title>${post.title} — FKKI [Repositori Digital]</title>
     <style>
         * { box-sizing: border-box; }
-        body { background-color: #f0f2f5; color: #222; font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5; }
+        body {
+            background-color: #f0f2f5; color: #222222;
+            font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5;
+        }
+        a:link { color: #004280; text-decoration: none; }
+        a:visited { color: #551a8b; }
+        a:hover { color: #0066cc; text-decoration: underline; }
+
+        .site-wrapper { width: 100%; background-color: #ffffff; border-bottom: 1px solid #cccccc; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         .container { width: 94%; max-width: 1200px; margin: 0 auto; }
+
         .top-bar { background-color: #1b2838; color: #b0c4de; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #101a24; }
         .top-bar-content { display: flex; justify-content: space-between; align-items: center; }
-        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #fff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
+
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
         .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
-        .journal-title h1 { font-family: Georgia, serif; font-size: 26px; margin: 0 0 5px 0; }
+        .journal-title h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .journal-title h1 a { color: #ffffff; text-decoration: none; }
         .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
+        .journal-issn { margin-top: 10px; font-family: 'Courier New', monospace; font-size: 11px; color: #ffdf73; letter-spacing: 1px; }
+
         .navbar { background-color: #2c4d75; border-bottom: 1px solid #1b365d; padding: 0; }
-        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
         .nav-links li { border-right: 1px solid #1b365d; }
-        .nav-links a { display: block; color: #fff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; text-decoration: none; }
-        .nav-links a:hover { background-color: #1b365d; color: #ffdf73; }
-        .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555; }
+        .nav-links a { display: block; color: #ffffff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .nav-links a:hover { background-color: #1b365d; text-decoration: none; color: #ffdf73; }
+
+        .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555555; }
+
         .main-body { padding: 25px 0; }
         .col-main { width: 100%; max-width: 900px; margin: 0 auto; }
-        .section-header { background: linear-gradient(to bottom, #eef2f7, #d8e1eb); border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9; color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; }
-        .article-item { background-color: #fff; border: 1px solid #e1e8ed; padding: 25px; margin-bottom: 20px; border-radius: 3px; }
-        .tag-kategori { background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d; font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; }
-        .article-title { font-family: Georgia, serif; font-size: 22px; margin: 10px 0; color: #1b365d; }
-        .article-meta { font-size: 12px; color: #555; margin-bottom: 15px; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; }
-        .article-abstract { font-size: 14px; line-height: 1.7; color: #222; text-align: justify; font-family: Georgia, serif; }
-        
-        /* Interaksi Like & Komentar */
-        .interaction-bar { margin-top: 20px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #e1e8ed; padding-top: 15px; }
-        .like-btn { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 6px 12px; font-weight: bold; cursor: pointer; border-radius: 3px; font-size: 12px; }
-        .like-btn:hover { background: #fecaca; }
 
-        .comments-section { background-color: #fff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 20px; margin-top: 20px; }
+        .section-header {
+            background: linear-gradient(to bottom, #eef2f7, #d8e1eb);
+            border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9;
+            color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .article-item { background-color: #ffffff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 25px; margin-bottom: 20px; }
+        .tag-kategori { background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d; font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 2px; }
+        .article-title { font-family: Georgia, serif; font-size: 22px; margin: 10px 0; color: #1b365d; line-height: 1.35; }
+        .article-meta { font-size: 12px; color: #555555; margin-bottom: 15px; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; }
+        .article-abstract { font-size: 14.5px; line-height: 1.75; color: #222222; text-align: justify; font-family: Georgia, serif; }
+        .article-abstract p { margin-bottom: 15px; }
+        
+        /* Tombol Like & Komentar */
+        .interaction-bar { margin-top: 25px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #e1e8ed; padding-top: 15px; }
+        .like-btn { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 7px 14px; font-weight: bold; cursor: pointer; border-radius: 3px; font-size: 12px; }
+        .like-btn:hover { background: #fecaca; }
+        .like-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .comments-section { background-color: #ffffff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 20px; margin-top: 20px; }
         .comment-form input, .comment-form textarea { width: 100%; padding: 8px; border: 1px solid #b8c7d9; border-radius: 2px; margin-bottom: 10px; font-size: 12px; font-family: inherit; }
         .comment-form textarea { min-height: 90px; }
-        .btn-submit { background-color: #1b365d; color: #fff; border: none; padding: 6px 14px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+        .btn-submit { background-color: #1b365d; color: #ffffff; border: none; padding: 7px 15px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
         .btn-submit:hover { background-color: #2c4d75; }
+        
         .comment-item { border-top: 1px solid #e1e8ed; padding: 12px 0; margin-top: 10px; }
         .comment-author { font-weight: bold; font-size: 12px; color: #1b365d; }
-        .comment-date { font-size: 11px; color: #666; margin-left: 6px; }
+        .comment-date { font-size: 11px; color: #666666; margin-left: 6px; }
         .reply-btn { background: none; border: none; color: #004280; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; margin-top: 5px; }
         .replies-list { margin-left: 20px; padding-left: 10px; border-left: 2px solid #b8c7d9; margin-top: 8px; }
 
         .site-footer { background-color: #1b365d; color: #d8e2ec; padding: 20px 0; border-top: 3px solid #c59b27; font-size: 12px; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+        @media (max-width: 768px) {
+            .nav-links { flex-direction: column; }
+            .nav-links li { border-right: none; border-bottom: 1px solid #1b365d; }
+        }
     </style>
 </head>
 <body>
 
     <div class="site-wrapper">
-        <div class="top-bar"><div class="container">PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div></div>
+        <div class="top-bar">
+            <div class="container top-bar-content">
+                <div>PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div>
+            </div>
+        </div>
+
         <header class="masthead">
             <div class="container masthead-inner">
                 <div class="journal-title">
-                    <h1>FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</h1>
+                    <h1><a href="/index.html">FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</a></h1>
                     <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
+                    <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
                 </div>
             </div>
         </header>
@@ -263,13 +304,15 @@
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="/index.html">[Indeks Naskah]</a></li>
-                    <li><a href="/admin.html">[Panel Redaksi]</a></li>
+                    <li><a href="/pedoman-penulisan.html">[Pedoman Penulisan]</a></li>
                 </ul>
             </div>
         </nav>
 
         <div class="breadcrumb-bar">
-            <div class="container">Lokasi: <a href="/index.html">Beranda</a> &raquo; <b>Detail Naskah</b></div>
+            <div class="container">
+                Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="/index.html">Arsip Terbitan</a> &raquo; <b>${post.title}</b>
+            </div>
         </div>
 
         <div class="container main-body">
@@ -277,14 +320,17 @@
                 <div class="section-header">:: Detail Naskah &amp; Kajian</div>
 
                 <article class="article-item">
-                    <span class="tag-kategori">${post.category || 'Kajian & Kritik'}</span> &nbsp;
-                    <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${post.date}</span>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${post.date}</span>
+                        <span class="tag-kategori">${post.category || 'Kajian & Kritik'}</span>
+                    </div>
+
                     <h1 class="article-title">${post.title}</h1>
                     <div class="article-meta">Oleh: <b>${post.author}</b></div>
                     <div class="article-abstract">${formattedContent}</div>
 
                     <div class="interaction-bar">
-                        <button class="like-btn" onclick="handleLike()">❤️ Sukai Naskah Ini (<span id="likeCount">0</span>)</button>
+                        <button class="like-btn" id="likeBtn" onclick="handleLike()">❤️ Sukai Naskah Ini (<span id="likeCount">0</span>)</button>
                     </div>
                 </article>
 
@@ -293,69 +339,99 @@
                     <div class="comment-form">
                         <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
                         <textarea id="c-text" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
-                        <button class="btn-submit" onclick="addComment()">Kirim Tanggapan</button>
+                        <button class="btn-submit" id="submitCommentBtn" onclick="addComment()">Kirim Tanggapan</button>
                     </div>
-                    <div id="comments-list"></div>
+                    <div id="comments-list"><p style="font-size:12px; color:#666;">Memuat tanggapan...</p></div>
                 </section>
             </div>
         </div>
 
         <footer class="site-footer">
-            <div class="container" style="display:flex; justify-content:space-between;">
-                <div><b>FKKI — Forum Kajian &amp; Kritik Independen</b></div>
-                <div>Lisensi Publikasi Terbuka</div>
+            <div class="container footer-content">
+                <div>
+                    <b>FKKI — Forum Kajian &amp; Kritik Independen</b><br>
+                    <span style="font-size: 11px; color: #a1b5cc;">Repositori Terbuka dan Independen.</span>
+                </div>
+                <div style="text-align: right; font-size: 11px;">
+                    Lisensi Publikasi Terbuka &middot; <span style="color: #ffdf73; font-weight: bold;">Nalaroid</span>
+                </div>
             </div>
         </footer>
     </div>
 
     <script>
         const SLUG = '${post.slug}';
-        const STORAGE_KEY = 'fkki_comments_' + SLUG;
-        const STATS_KEY = 'fkki_stats_' + SLUG;
+        const BIN_ID = '${JSONBIN_BIN_ID}';
+        const API_KEY = '${JSONBIN_API_KEY}';
+        let fullCloudData = {};
 
-        function getData() {
-            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        async function fetchCloud() {
+            if (BIN_ID === 'MASUKKAN_BIN_ID_ANDA') {
+                renderCommentsUI([]);
+                return;
+            }
+            try {
+                const res = await fetch(\`https://api.jsonbin.io/v3/b/\${BIN_ID}/latest\`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    fullCloudData = data.record || {};
+                    const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+                    document.getElementById('likeCount').innerText = postData.likes || 0;
+                    renderCommentsUI(postData.comments || []);
+                }
+            } catch (e) {}
         }
 
-        function getStats() {
-            return JSON.parse(localStorage.getItem(STATS_KEY) || '{"likes": 0, "comments": 0}');
+        async function saveCloud(updatedPostData) {
+            if (BIN_ID === 'MASUKKAN_BIN_ID_ANDA') return alert('Admin belum mengatur JSONBin API Key.');
+            fullCloudData[SLUG] = updatedPostData;
+            await fetch(\`https://api.jsonbin.io/v3/b/\${BIN_ID}\`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': API_KEY
+                },
+                body: JSON.stringify(fullCloudData)
+            });
         }
 
-        function updateStatsUI() {
-            const stats = getStats();
-            document.getElementById('likeCount').innerText = stats.likes;
+        async function handleLike() {
+            const btn = document.getElementById('likeBtn');
+            btn.disabled = true;
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            postData.likes = (postData.likes || 0) + 1;
+            document.getElementById('likeCount').innerText = postData.likes;
+            await saveCloud(postData);
+            btn.disabled = false;
         }
 
-        function handleLike() {
-            const stats = getStats();
-            stats.likes += 1;
-            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-            updateStatsUI();
-        }
-
-        function saveData(comments) {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(comments));
-            
-            // Perbarui jumlah total komentar ke stats
-            let totalComments = comments.length;
-            comments.forEach(c => totalComments += c.replies.length);
-            const stats = getStats();
-            stats.comments = totalComments;
-            localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-
-            renderComments();
-        }
-
-        function addComment() {
+        async function addComment() {
             const name = document.getElementById('c-name').value.trim();
             const text = document.getElementById('c-text').value.trim();
             if (!name || !text) return alert('Nama dan isi tanggapan wajib diisi.');
 
-            const comments = getData();
-            comments.push({ id: Date.now(), name, text, date: new Date().toLocaleDateString('id-ID'), replies: [] });
+            const btn = document.getElementById('submitCommentBtn');
+            btn.disabled = true;
+            btn.innerText = 'Mengirim...';
+
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            if (!postData.comments) postData.comments = [];
+            postData.comments.push({
+                id: Date.now(),
+                name,
+                text,
+                date: new Date().toLocaleDateString('id-ID'),
+                replies: []
+            });
+
+            await saveCloud(postData);
             document.getElementById('c-name').value = '';
             document.getElementById('c-text').value = '';
-            saveData(comments);
+            renderCommentsUI(postData.comments);
+            btn.disabled = false;
+            btn.innerText = 'Kirim Tanggapan';
         }
 
         function toggleReplyBox(id) {
@@ -363,23 +439,24 @@
             box.style.display = box.style.display === 'none' ? 'block' : 'none';
         }
 
-        function addReply(commentId) {
+        async function addReply(commentId) {
             const name = document.getElementById('r-name-' + commentId).value.trim();
             const text = document.getElementById('r-text-' + commentId).value.trim();
             if (!name || !text) return alert('Nama dan balasan wajib diisi.');
 
-            const comments = getData();
-            const target = comments.find(c => c.id === commentId);
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            const target = (postData.comments || []).find(c => c.id === commentId);
             if (target) {
+                if (!target.replies) target.replies = [];
                 target.replies.push({ name, text, date: new Date().toLocaleDateString('id-ID') });
-                saveData(comments);
+                await saveCloud(postData);
+                renderCommentsUI(postData.comments);
             }
         }
 
-        function renderComments() {
-            const comments = getData();
+        function renderCommentsUI(comments) {
             const container = document.getElementById('comments-list');
-            if (comments.length === 0) {
+            if (!comments || comments.length === 0) {
                 container.innerHTML = '<p style="font-size:12px; color:#666; font-style:italic; margin-top:10px;">Belum ada tanggapan pada naskah ini.</p>';
                 return;
             }
@@ -400,7 +477,7 @@
                     </div>
 
                     <div class="replies-list">
-                        \${c.replies.map(r => \`
+                        \${(c.replies || []).map(r => \`
                             <div style="margin-bottom: 6px; font-size: 12px;">
                                 <span class="comment-author">\${r.name}</span>
                                 <span class="comment-date">(\${r.date})</span>
@@ -412,8 +489,7 @@
             \`).join('');
         }
 
-        updateStatsUI();
-        renderComments();
+        fetchCloud();
     <\/script>
 </body>
 </html>`;
@@ -440,7 +516,6 @@
 
                 const postObj = { slug, title, category, author, date: dateStr, timestamp: now.toISOString(), excerpt, content };
 
-                // 1. Buat atau update file ke pages/{slug}.html
                 const pagePath = `pages/${slug}.html`;
                 let pageSha = null;
                 const pageRes = await ghReq(pagePath, 'GET');
@@ -456,7 +531,6 @@
                     ...(pageSha && { sha: pageSha })
                 });
 
-                // 2. Update posts.json di memori lokal secara instan (Optimistic UI)
                 let postsSha = null;
                 const postsRes = await ghReq('posts.json', 'GET');
                 if (postsRes.status === 200) {
@@ -517,7 +591,7 @@
             tbody.innerHTML = globalPostsCache.map(p => `
                 <tr>
                     <td><a href="/pages/${p.slug}.html" target="_blank" style="font-weight:bold;">${p.title}</a></td>
-                    <td><span class="tag-kategori">${p.category || 'Kajian'}</span></td>
+                    <td>${p.category || 'Kajian'}</td>
                     <td>${p.date}</td>
                     <td>
                         <button class="btn" style="padding:4px 8px; font-size:10px;" onclick="editPost('${p.slug}')">Edit</button>
@@ -567,7 +641,6 @@
                     postsSha = (await postsRes.json()).sha;
                 }
 
-                // Update cache lokal langsung tanpa delay
                 globalPostsCache = globalPostsCache.filter(x => x.slug !== slug);
 
                 await ghReq('posts.json', 'PUT', {
