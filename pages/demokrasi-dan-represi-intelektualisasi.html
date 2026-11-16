@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+        <html lang="id">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Demokrasi dan Represi Intelektualisasi — FKKI [Repositori Digital]</title>
+            <style>
+                * { box-sizing: border-box; }
+                body { background-color: #f0f2f5; color: #222; font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5; }
+                .container { width: 94%; max-width: 1200px; margin: 0 auto; }
+                .top-bar { background-color: #1b2838; color: #b0c4de; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #101a24; }
+                .top-bar-content { display: flex; justify-content: space-between; align-items: center; }
+                .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #fff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
+                .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+                .journal-title h1 { font-family: Georgia, serif; font-size: 26px; margin: 0 0 5px 0; }
+                .journal-title h1 a { color: #fff; text-decoration: none; }
+                .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
+                .navbar { background-color: #2c4d75; border-bottom: 1px solid #1b365d; padding: 0; }
+                .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+                .nav-links li { border-right: 1px solid #1b365d; }
+                .nav-links a { display: block; color: #fff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+                .nav-links a:hover { background-color: #1b365d; color: #ffdf73; }
+                .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555; }
+                .main-body { padding: 25px 0; }
+                .col-main { width: 100%; max-width: 900px; margin: 0 auto; }
+                .section-header { background: linear-gradient(to bottom, #eef2f7, #d8e1eb); border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9; color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; }
+                .article-item { background-color: #fff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 25px; margin-bottom: 20px; }
+                .tag-kategori { background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d; font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; }
+                .article-title { font-family: Georgia, serif; font-size: 22px; margin: 10px 0; color: #1b365d; line-height: 1.35; }
+                .article-meta { font-size: 12px; color: #555; margin-bottom: 15px; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; }
+                .article-abstract { font-size: 14.5px; line-height: 1.75; color: #222; text-align: justify; font-family: Georgia, serif; }
+                .article-abstract p { margin-bottom: 15px; }
+                
+                /* Tombol Like Simpel Sesuai Permintaan (Tanpa Hover/Warna Mencolok) */
+                .interaction-bar { margin-top: 25px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #e1e8ed; padding-top: 15px; }
+                .simple-like-btn { background: #f8f9fa; border: 1px solid #cbd5e1; color: #334155; padding: 5px 12px; font-size: 12px; cursor: pointer; border-radius: 2px; font-family: inherit; display: inline-flex; align-items: center; gap: 5px; }
+                .simple-like-btn:active { background: #e2e8f0; }
+        
+                .comments-section { background-color: #fff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 20px; margin-top: 20px; }
+                .comment-form input, .comment-form textarea { width: 100%; padding: 8px; border: 1px solid #b8c7d9; border-radius: 2px; margin-bottom: 10px; font-size: 12px; font-family: inherit; }
+                .comment-form textarea { min-height: 90px; }
+                .btn-submit { background-color: #1b365d; color: #fff; border: none; padding: 7px 15px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+                .btn-submit:hover { background-color: #2c4d75; }
+                
+                .comment-item { border-top: 1px solid #e1e8ed; padding: 12px 0; margin-top: 10px; }
+                .comment-author { font-weight: bold; font-size: 12px; color: #1b365d; }
+                .comment-date { font-size: 11px; color: #666; margin-left: 6px; }
+                .reply-btn { background: none; border: none; color: #004280; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; margin-top: 5px; }
+                .replies-list { margin-left: 20px; padding-left: 10px; border-left: 2px solid #b8c7d9; margin-top: 8px; }
+        
+                .site-footer { background-color: #1b365d; color: #d8e2ec; padding: 20px 0; border-top: 3px solid #c59b27; font-size: 12px; }
+            </style>
+        </head>
+        <body>
+        
+            <div class="site-wrapper">
+                <div class="top-bar">
+                    <div class="container top-bar-content">
+                        <div>PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div>
+                    </div>
+                </div>
+        
+                <header class="masthead">
+                    <div class="container masthead-inner">
+                        <div class="journal-title">
+                            <h1><a href="/index.html">FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</a></h1>
+                            <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
+                            <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
+                        </div>
+                    </div>
+                </header>
+        
+                <nav class="navbar">
+                    <div class="container">
+                        <ul class="nav-links">
+                            <li><a href="/index.html">[Indeks Naskah]</a></li>
+                            <li><a href="/pedoman-penulisan.html">[Pedoman Penulisan]</a></li>
+                        </ul>
+                    </div>
+                </nav>
+        
+                <div class="breadcrumb-bar">
+                    <div class="container">
+                        Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="/index.html">Arsip Terbitan</a> &raquo; <b>Demokrasi dan Represi Intelektualisasi</b>
+                    </div>
+                </div>
+        
+                <div class="container main-body">
+                    <div class="col-main">
+                        <div class="section-header">:: Detail Naskah &amp; Kajian</div>
+        
+                        <article class="article-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: 16 November 2026</span>
+                                <span class="tag-kategori">Ekonomi Politik</span>
+                            </div>
+        
+                            <h1 class="article-title">Demokrasi dan Represi Intelektualisasi</h1>
+                            <div class="article-meta">Oleh: <b>Tim Redaksi FKKI</b></div>
+                            <div class="article-abstract"><p>Demokrasi modern sering kali diagungkan sebagai ruang paling ideal bagi kebebasan berpikir, berpendapat, dan berdialektika. Secara prosedural, ia menjamin hak setiap warga negara untuk bersuara melalui kotak suara, ruang publik, maupun mimbar akademik. Namun, di balik fasad kebebasan elektoral yang tampak meriah, sering kali bekerja sebuah mekanisme sunyi yang justru membatasi daya kritis warga negara: represi terhadap intelektualisasi. Alih-alih hadir dalam bentuk penyensoran frontal seperti pada rezim otoriter klasik, represi dalam demokrasi kontemporer beroperasi secara lebih halus melalui pendangkalan diskursus publik, anti-intelektualisme populis, hingga kooptasi institusi pengetahuan oleh kepentingan kekuasaan dan pasar.</p><p>Salah satu wajah paling nyata dari represi intelektualisasi dalam demokrasi adalah menguatnya populisme yang anti-intelektual. Dalam logika politik elektoral yang berorientasi pada perolehan suara secara cepat, gagasan-gagasan kompleks yang membutuhkan perenungan panjang sering kali dianggap tidak menarik, elitis, atau bahkan mengancam. Aktor-aktor politik cenderung menyederhanakan persoalan struktural menjadi slogan-slogan emosional yang mudah dicerna massa. Akibatnya, ruang publik dipenuhi oleh hiruk-pikuk sentimen dan polarisasi identitas, sementara analisis berbasis data, filsafat, dan kritik teoretis terpinggirkan. Ketika pemikiran kritis dicap sebagai sesuatu yang "terlalu rumit" atau "tidak membumi", masyarakat secara perlahan dikondisikan untuk mencurigai intelektualitas dan menerima realitas politik secara apa adanya tanpa pertanyaan mendasar.</p><p>Di saat yang sama, represi intelektualisasi juga terjadi melalui mekanisme teknokratisasi dan komodifikasi lembaga pendidikan maupun ruang-ruang riset. Kampus dan lembaga pemikir yang seharusnya menjadi benteng otonomi keilmuan kerap terdorong untuk tunduk pada logika efisiensi pasar dan agenda pragmatis kekuasaan. Ilmu pengetahuan diarahkan semata-mata untuk memproduksi tenaga kerja yang patuh serta solusi teknis jangka pendek, bukan untuk melahirkan intelektual organik yang berani menggugat ketimpangan struktural. Penelitian yang bersifat kritis terhadap kebijakan negara atau dominasi korporasi sering kali dipersulit akses pendanaannya atau didelegitimasi secara halus melalui birokratisasi yang kaku. Dalam situasi ini, intelektualitas tidak dilarang secara eksplisit, tetapi dijinakkan agar tidak melampaui batas aman status quo.</p><p>Dampak jangka panjang dari represi intelektualisasi ini adalah lahirnya demokrasi yang kehilangan substansi deliberatifnya. Demokrasi tanpa kedalaman intelektual mudah terjebak menjadi sekadar prosedur rutin lima tahunan yang melahirkan oligarki baru atau tirani mayoritas. Tanpa warga negara yang terlatih untuk berpikir kritis, membedah ideologi di balik kebijakan, dan menuntut pertanggungjawaban rasional dari para pemimpinnya, kebebasan berpendapat hanya akan menghasilkan kebisingan informasi tanpa arah emansipasi. Masyarakat diberi ilusi kebebasan berbicara, sementara kapasitas mereka untuk memahami akar penindasan yang mereka alami telah lebih dulu ditumpulkan.</p><p>Menjaga demokrasi agar tetap hidup dan bermakna menuntut perlawanan sadar terhadap segala bentuk pembungkaman nalar kritis. Intelektualisasi bukanlah menara gading yang terpisah dari rakyat, melainkan senjata pembebasan agar warga negara tidak mudah dimanipulasi oleh retorika kosong maupun hegemoni kekuasaan. Demokrasi yang sehat justru membutuhkan ketegangan dialektis—ruang di mana ide-ide radikal diuji, kebijakan dibedah secara tajam, dan tradisi membaca serta menulis kritis dirawat sebagai bagian tak terpisahkan dari budaya kewargaan. Sebab, pada akhirnya, kualitas sebuah demokrasi tidak pernah melampaui kualitas nalar kritis masyarakat yang menopangnya.</p></div>
+        
+                            <div class="interaction-bar">
+                                <button class="simple-like-btn" onclick="handleLike()">👍 Suka (<span id="likeCount">0</span>)</button>
+                            </div>
+                        </article>
+        
+                        <section class="comments-section">
+                            <div class="section-header" style="margin-bottom: 15px;">:: Tanggapan &amp; Sanggahan Pembaca</div>
+                            <div class="comment-form">
+                                <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
+                                <textarea id="c-text" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
+                                <button class="btn-submit" onclick="addComment()">Kirim Tanggapan</button>
+                            </div>
+                            <div id="comments-list"><p style="font-size:12px; color:#666;">Memuat tanggapan...</p></div>
+                        </section>
+                    </div>
+                </div>
+        
+                <footer class="site-footer">
+                    <div class="container" style="display:flex; justify-content:space-between;">
+                        <div><b>FKKI — Forum Kajian &amp; Kritik Independen</b></div>
+                        <div>Lisensi Publikasi Terbuka</div>
+                    </div>
+                </footer>
+            </div>
+        
+            <script>
+                const SLUG = 'demokrasi-dan-represi-intelektualisasi';
+                const SPREADSHEET_URL = 'MASUKKAN_URL_WEB_APP_SPREADSHEET_ANDA';
+                let currentPayload = { likes: 0, comments: [] };
+        
+                async function loadData() {
+                    try {
+                        let res = await fetch(`${SPREADSHEET_URL}?slug=${SLUG}`);
+                        if (res.ok) {
+                            currentPayload = await res.json();
+                            if (!currentPayload.comments) currentPayload.comments = [];
+                            document.getElementById('likeCount').innerText = currentPayload.likes || 0;
+                            renderComments(currentPayload.comments);
+                        }
+                    } catch (e) {
+                        renderComments([]);
+                    }
+                }
+        
+                async function saveData() {
+                    try {
+                        await fetch(SPREADSHEET_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ slug: SLUG, payload: currentPayload })
+                        });
+                    } catch (e) {}
+                }
+        
+                async function handleLike() {
+                    currentPayload.likes = (currentPayload.likes || 0) + 1;
+                    document.getElementById('likeCount').innerText = currentPayload.likes;
+                    await saveData();
+                }
+        
+                async function addComment() {
+                    const name = document.getElementById('c-name').value.trim();
+                    const text = document.getElementById('c-text').value.trim();
+                    if (!name || !text) return alert('Nama dan isi tanggapan wajib diisi.');
+        
+                    currentPayload.comments.push({
+                        id: Date.now(),
+                        name,
+                        text,
+                        date: new Date().toLocaleDateString('id-ID'),
+                        replies: []
+                    });
+        
+                    document.getElementById('c-name').value = '';
+                    document.getElementById('c-text').value = '';
+                    renderComments(currentPayload.comments);
+                    await saveData();
+                }
+        
+                function toggleReplyBox(id) {
+                    const box = document.getElementById('reply-box-' + id);
+                    box.style.display = box.style.display === 'none' ? 'block' : 'none';
+                }
+        
+                async function addReply(commentId) {
+                    const name = document.getElementById('r-name-' + commentId).value.trim();
+                    const text = document.getElementById('r-text-' + commentId).value.trim();
+                    if (!name || !text) return alert('Nama dan balasan wajib diisi.');
+        
+                    const target = currentPayload.comments.find(c => c.id === commentId);
+                    if (target) {
+                        if (!target.replies) target.replies = [];
+                        target.replies.push({ name, text, date: new Date().toLocaleDateString('id-ID') });
+                        renderComments(currentPayload.comments);
+                        await saveData();
+                    }
+                }
+        
+                function renderComments(comments) {
+                    const container = document.getElementById('comments-list');
+                    if (!comments || comments.length === 0) {
+                        container.innerHTML = '<p style="font-size:12px; color:#666; font-style:italic; margin-top:10px;">Belum ada tanggapan pada naskah ini.</p>';
+                        return;
+                    }
+        
+                    container.innerHTML = comments.map(c => `
+                        <div class="comment-item">
+                            <div>
+                                <span class="comment-author">${c.name}</span>
+                                <span class="comment-date">(${c.date})</span>
+                            </div>
+                            <p style="margin: 5px 0 8px 0; font-size: 13px;">${c.text}</p>
+                            <button class="reply-btn" onclick="toggleReplyBox(${c.id})">[Balas Tanggapan Ini]</button>
+        
+                            <div id="reply-box-${c.id}" style="display:none; margin-top:8px;" class="comment-form">
+                                <input type="text" id="r-name-${c.id}" placeholder="Nama Anda...">
+                                <textarea id="r-text-${c.id}" placeholder="Tulis balasan..."></textarea>
+                                <button class="btn-submit" onclick="addReply(${c.id})">Kirim Balasan</button>
+                            </div>
+        
+                            <div class="replies-list">
+                                ${(c.replies || []).map(r => `
+                                    <div style="margin-bottom: 6px; font-size: 12px;">
+                                        <span class="comment-author">${r.name}</span>
+                                        <span class="comment-date">(${r.date})</span>
+                                        <p style="margin: 3px 0;">${r.text}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('');
+                }
+        
+                loadData();
+            </script>
+        </body>
+        </html>
