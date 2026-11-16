@@ -179,7 +179,7 @@
             return res;
         }
 
-        // Template Halaman Detail Artikel (judul-tulisan.html) Beserta Fitur Komentar & Balasan Ala Blog
+        // Template Halaman Detail Artikel (judul-tulisan.html) dengan Header 100% Sama seperti index.html
         function generateArticleHTML(post) {
             const formattedContent = post.content.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
             return `<!DOCTYPE html>
@@ -187,59 +187,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${post.title} — FKKI</title>
+    <title>${post.title} — FKKI [Repositori Digital]</title>
     <style>
         * { box-sizing: border-box; }
-        body { background-color: #f0f2f5; color: #222; font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
-        .container { width: 94%; max-width: 900px; margin: 0 auto; padding: 20px 0; }
-        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #fff; padding: 20px 0; border-bottom: 3px solid #c59b27; text-align: center; }
-        .masthead h1 a { color: #fff; text-decoration: none; font-family: Georgia, serif; }
-        .article-box { background: #fff; border: 1px solid #e1e8ed; padding: 30px; margin-top: 20px; border-radius: 3px; }
-        .article-title { font-family: Georgia, serif; font-size: 24px; color: #1b365d; margin-bottom: 10px; }
-        .meta { font-size: 12px; color: #666; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; margin-bottom: 20px; }
-        .content { font-family: Georgia, serif; font-size: 15px; color: #222; text-align: justify; }
+        body {
+            background-color: #f0f2f5; color: #222222;
+            font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5;
+        }
+        a:link { color: #004280; text-decoration: none; }
+        a:visited { color: #551a8b; }
+        a:hover { color: #0066cc; text-decoration: underline; }
+
+        .site-wrapper { width: 100%; background-color: #ffffff; border-bottom: 1px solid #cccccc; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .container { width: 94%; max-width: 1200px; margin: 0 auto; }
+        .article-container { width: 94%; max-width: 900px; margin: 0 auto; padding: 25px 0; }
+
+        /* HEADER IDENTIK DENGAN INDEX.HTML */
+        .top-bar { background-color: #1b2838; color: #b0c4de; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #101a24; }
+        .top-bar-content { display: flex; justify-content: space-between; align-items: center; }
+
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
+        .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .journal-title h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .journal-title h1 a { color: #ffffff; text-decoration: none; }
+        .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
+        .journal-issn { margin-top: 10px; font-family: 'Courier New', monospace; font-size: 11px; color: #ffdf73; letter-spacing: 1px; }
+
+        .navbar { background-color: #2c4d75; border-bottom: 1px solid #1b365d; padding: 0; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+        .nav-links li { border-right: 1px solid #1b365d; }
+        .nav-links a { display: block; color: #ffffff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .nav-links a:hover { background-color: #1b365d; text-decoration: none; color: #ffdf73; }
+
+        .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555555; }
+
+        /* KONTEN ARTIKEL */
+        .article-box { background: #fff; border: 1px solid #e1e8ed; padding: 30px; border-radius: 3px; }
+        .tag-kategori {
+            background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d;
+            font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 2px;
+        }
+        .article-title { font-family: Georgia, serif; font-size: 24px; color: #1b365d; margin: 12px 0 10px 0; line-height: 1.35; }
+        .meta { font-size: 12px; color: #555555; border-bottom: 1px dashed #d8e2ec; padding-bottom: 12px; margin-bottom: 20px; }
+        .content { font-family: Georgia, serif; font-size: 15px; line-height: 1.7; color: #222222; text-align: justify; }
         .content p { margin-bottom: 15px; }
         
-        /* Komentar & Balasan */
+        /* KOMENTAR & BALASAN */
         .comments-section { background: #fff; border: 1px solid #e1e8ed; padding: 25px; margin-top: 20px; border-radius: 3px; }
-        .comment-form input, .comment-form textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #b8c7d9; font-family: inherit; font-size: 12px; }
-        .btn { background-color: #1b365d; color: #fff; border: none; padding: 6px 14px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .section-header {
+            background: linear-gradient(to bottom, #eef2f7, #d8e1eb);
+            border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9;
+            color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .comment-form input, .comment-form textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #b8c7d9; font-family: inherit; font-size: 12px; border-radius: 2px; }
+        .btn { background-color: #1b365d; color: #fff; border: none; padding: 6px 14px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+        .btn:hover { background-color: #2c4d75; }
         .comment-item { border-top: 1px solid #e1e8ed; padding: 12px 0; margin-top: 10px; }
         .comment-author { font-weight: bold; font-size: 12px; color: #1b365d; }
         .comment-date { font-size: 11px; color: #777; margin-left: 5px; }
         .reply-btn { background: none; border: none; color: #004280; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; margin-top: 5px; }
         .replies-list { margin-left: 20px; padding-left: 10px; border-left: 2px solid #b8c7d9; margin-top: 8px; }
+
+        /* FOOTER IDENTIK DENGAN INDEX.HTML */
+        .site-footer { background-color: #1b365d; color: #d8e2ec; padding: 20px 0; border-top: 3px solid #c59b27; font-size: 12px; margin-top: 30px; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+        @media (max-width: 768px) {
+            .masthead-inner { flex-direction: column; align-items: flex-start; }
+            .nav-links { flex-direction: column; }
+            .nav-links li { border-right: none; border-bottom: 1px solid #1b365d; }
+        }
     </style>
 </head>
 <body>
-    <header class="masthead">
-        <div class="container">
-            <h1><a href="/">FKKI — Forum Kajian &amp; Kritik Independen</a></h1>
+    <div class="site-wrapper">
+        <div class="top-bar">
+            <div class="container top-bar-content">
+                <div>PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div>
+            </div>
         </div>
-    </header>
 
-    <div class="container">
-        <article class="article-box">
-            <span style="font-family: Courier New, monospace; font-size: 11px; color: #1b365d; font-weight: bold;">NASKAH PUBLIKASI</span>
-            <h1 class="article-title">${post.title}</h1>
-            <div class="meta">Dipublikasikan pada ${post.date} &bull; Oleh: <b>${post.author}</b></div>
-            <div class="content">
-                ${formattedContent}
+        <header class="masthead">
+            <div class="container masthead-inner">
+                <div class="journal-title">
+                    <h1><a href="/">FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</a></h1>
+                    <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
+                    <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
+                </div>
             </div>
-        </article>
+        </header>
 
-        <!-- FITUR KOMENTAR & BALASAN -->
-        <section class="comments-section">
-            <h3 style="margin-top: 0; font-size: 14px; color: #1b365d; text-transform: uppercase;">:: Tanggapan &amp; Sanggahan Pembaca</h3>
-            
-            <div class="comment-form">
-                <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
-                <textarea id="c-text" rows="3" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
-                <button class="btn" onclick="addComment()">Kirim Tanggapan</button>
+        <nav class="navbar">
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="/">[Indeks Naskah]</a></li>
+                    <li><a href="/admin">[Panel Redaksi]</a></li>
+                </ul>
             </div>
+        </nav>
 
-            <div id="comments-list"></div>
-        </section>
+        <div class="breadcrumb-bar">
+            <div class="container">
+                Lokasi: <a href="/">Beranda</a> &raquo; <a href="/">Arsip Terbitan</a> &raquo; <b>${post.title}</b>
+            </div>
+        </div>
+
+        <div class="article-container">
+            <article class="article-box">
+                <span class="tag-kategori">Kajian &amp; Kritik</span> &nbsp;
+                <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${post.date}</span>
+                <h1 class="article-title">${post.title}</h1>
+                <div class="meta">Oleh: <b>${post.author}</b></div>
+                <div class="content">
+                    ${formattedContent}
+                </div>
+            </article>
+
+            <!-- FITUR KOMENTAR & BALASAN -->
+            <section class="comments-section">
+                <div class="section-header">:: Tanggapan &amp; Sanggahan Pembaca</div>
+                
+                <div class="comment-form">
+                    <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
+                    <textarea id="c-text" rows="3" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
+                    <button class="btn" onclick="addComment()">Kirim Tanggapan</button>
+                </div>
+
+                <div id="comments-list"></div>
+            </section>
+        </div>
+
+        <footer class="site-footer">
+            <div class="container footer-content">
+                <div>
+                    <b>FKKI — Forum Kajian &amp; Kritik Independen</b><br>
+                    <span style="font-size: 11px; color: #a1b5cc;">Repositori Terbuka dan Independen.</span>
+                </div>
+                <div style="text-align: right; font-size: 11px;">
+                    Lisensi Publikasi Terbuka &middot; <span style="color: #ffdf73; font-weight: bold;">Nalaroid</span>
+                </div>
+            </div>
+        </footer>
     </div>
 
     <script>
@@ -339,7 +427,6 @@
 
                 const postObj = { slug, title, author, date: dateStr, timestamp: now.toISOString(), excerpt, content };
 
-                // 1. Buat atau update file ke pages/{slug}.html (GitHub API otomatis membuat folder pages jika belum ada)
                 const pagePath = `pages/${slug}.html`;
                 let pageSha = null;
                 const pageRes = await ghReq(pagePath, 'GET');
@@ -355,7 +442,6 @@
                     ...(pageSha && { sha: pageSha })
                 });
 
-                // 2. Update posts.json di root repositori
                 let posts = [];
                 let postsSha = null;
                 const postsRes = await ghReq('posts.json', 'GET');
