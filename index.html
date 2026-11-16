@@ -108,22 +108,21 @@
         <nav class="navbar">
             <div class="container">
                 <ul class="nav-links">
-                    <li><a href="index.html">[Indeks Naskah]</a></li>
-                    <li><a href="admin.html">[Panel Redaksi]</a></li>
+                    <li><a href="/index.html">[Indeks Naskah]</a></li>
+                    <li><a href="/admin.html">[Panel Redaksi]</a></li>
                 </ul>
             </div>
         </nav>
 
         <div class="breadcrumb-bar">
             <div class="container">
-                Lokasi: <a href="index.html">Beranda</a> &raquo; <a href="#">Arsip Terbitan</a> &raquo; <b>Daftar Naskah Terbaru</b>
+                Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="#">Arsip Terbitan</a> &raquo; <b>Daftar Naskah Terbaru</b>
             </div>
         </div>
 
         <div class="container main-body">
             <div class="content-grid">
                 
-                <!-- KOLOM KIRI: DAFTAR NASKAH DINAMIS -->
                 <main class="col-main">
                     <div class="section-header">
                         :: Daftar Naskah &amp; Kajian Terbaru
@@ -138,7 +137,6 @@
                     <div id="paginationContainer" style="display: none;"></div>
                 </main>
 
-                <!-- KOLOM KANAN: SIDEBAR WIDGETS -->
                 <aside class="col-sidebar">
                     <div class="sidebar-widget">
                         <div class="section-header" style="margin-bottom: 0;">:: Pencarian Arsip</div>
@@ -231,16 +229,21 @@
 
             let html = '';
             paginatedItems.forEach(art => {
+                // Ambil data interaksi like & komentar dari localStorage artikel terkait
+                const stats = JSON.parse(localStorage.getItem('fkki_stats_' + art.slug) || '{"likes": 0, "comments": 0}');
+
                 html += `
                     <article class="article-item">
-                        <span class="tag-kategori">Kajian &amp; Kritik</span> &nbsp;
+                        <span class="tag-kategori">${art.category || 'Kajian & Kritik'}</span> &nbsp;
                         <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${art.date}</span>
                         <h2 class="article-title"><a href="/pages/${art.slug}.html">${art.title}</a></h2>
                         <div class="article-meta">Oleh: <b>${art.author}</b></div>
                         <p class="article-abstract">${art.excerpt}</p>
                         <div class="article-footer-links">
                             <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
-                            <div style="color: #444444;">Tanggapan / Sanggahan: <b>(0)</b></div>
+                            <div style="color: #444444;">
+                                Suka: <b>❤️ ${stats.likes}</b> &nbsp;|&nbsp; Tanggapan: <b>💬 ${stats.comments}</b>
+                            </div>
                         </div>
                     </article>
                 `;
