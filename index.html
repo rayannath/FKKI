@@ -200,7 +200,7 @@
         let articlesPerPage = 3;
         let currentPage = 1;
         let allArticles = [];
-
+    
         async function loadArticles() {
             try {
                 let response = await fetch('/posts.json?' + new Date().getTime());
@@ -212,7 +212,7 @@
                 renderPage(currentPage);
             } catch (err) {}
         }
-
+    
         function renderPage(page) {
             let container = document.getElementById('articleContainer');
             let pagingContainer = document.getElementById('paginationContainer');
@@ -222,34 +222,39 @@
                 pagingContainer.style.display = 'none';
                 return;
             }
-
+    
             let start = (page - 1) * articlesPerPage;
             let end = start + articlesPerPage;
             let paginatedItems = allArticles.slice(start, end);
-
+    
             let html = '';
             paginatedItems.forEach(art => {
-                // Ambil data interaksi like & komentar dari localStorage artikel terkait
+                // Ambil statistik real-time dari localStorage berdasarkan slug artikel
                 const stats = JSON.parse(localStorage.getItem('fkki_stats_' + art.slug) || '{"likes": 0, "comments": 0}');
-
+    
                 html += `
                     <article class="article-item">
-                        <span class="tag-kategori">${art.category || 'Kajian & Kritik'}</span> &nbsp;
-                        <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${art.date}</span>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                            <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${art.date}</span>
+                            <!-- KATEGORI DI SEBELAH KANAN -->
+                            <span class="tag-kategori">${art.category || 'Kajian & Kritik'}</span>
+                        </div>
+    
                         <h2 class="article-title"><a href="/pages/${art.slug}.html">${art.title}</a></h2>
                         <div class="article-meta">Oleh: <b>${art.author}</b></div>
                         <p class="article-abstract">${art.excerpt}</p>
+                        
                         <div class="article-footer-links">
                             <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
-                            <div style="color: #444444;">
-                                Suka: <b>❤️ ${stats.likes}</b> &nbsp;|&nbsp; Tanggapan: <b>💬 ${stats.comments}</b>
+                            <div style="color: #444444; font-weight: bold;">
+                                ${stats.likes} Suka &nbsp;&bull;&nbsp; ${stats.comments} Tanggapan
                             </div>
                         </div>
                     </article>
                 `;
             });
             container.innerHTML = html;
-
+    
             let totalPages = Math.ceil(allArticles.length / articlesPerPage);
             if (totalPages > 1) {
                 let pagingHtml = `<div class="pagination">Halaman <b>${page}</b> dari ${totalPages} &nbsp;&mdash;&nbsp; `;
@@ -267,13 +272,13 @@
                 pagingContainer.style.display = 'none';
             }
         }
-
+    
         function changePage(p) {
             currentPage = p;
             renderPage(currentPage);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
+    
         window.onload = loadArticles;
     </script>
 </body>
