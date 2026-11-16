@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subjektivitas Marx dan Eksistensialisme Sartre — FKKI [Repositori Digital]</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f0f2f5; color: #222222;
+            font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5;
+        }
+        a:link { color: #004280; text-decoration: none; }
+        a:visited { color: #551a8b; }
+        a:hover { color: #0066cc; text-decoration: underline; }
+
+        .site-wrapper { width: 100%; background-color: #ffffff; border-bottom: 1px solid #cccccc; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .container { width: 94%; max-width: 1200px; margin: 0 auto; }
+
+        .top-bar { background-color: #1b2838; color: #b0c4de; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #101a24; }
+        .top-bar-content { display: flex; justify-content: space-between; align-items: center; }
+
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
+        .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .journal-title h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .journal-title h1 a { color: #ffffff; text-decoration: none; }
+        .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
+        .journal-issn { margin-top: 10px; font-family: 'Courier New', monospace; font-size: 11px; color: #ffdf73; letter-spacing: 1px; }
+
+        .navbar { background-color: #2c4d75; border-bottom: 1px solid #1b365d; padding: 0; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+        .nav-links li { border-right: 1px solid #1b365d; }
+        .nav-links a { display: block; color: #ffffff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .nav-links a:hover { background-color: #1b365d; text-decoration: none; color: #ffdf73; }
+
+        .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555555; }
+
+        .main-body { padding: 25px 0; }
+        .col-main { width: 100%; max-width: 900px; margin: 0 auto; }
+
+        .section-header {
+            background: linear-gradient(to bottom, #eef2f7, #d8e1eb);
+            border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9;
+            color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .article-item { background-color: #ffffff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 25px; margin-bottom: 20px; }
+        .tag-kategori { background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d; font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 2px; }
+        .article-title { font-family: Georgia, serif; font-size: 22px; margin: 10px 0; color: #1b365d; line-height: 1.35; }
+        .article-meta { font-size: 12px; color: #555555; margin-bottom: 15px; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; }
+        .article-abstract { font-size: 14.5px; line-height: 1.75; color: #222222; text-align: justify; font-family: Georgia, serif; }
+        .article-abstract p { margin-bottom: 15px; }
+        
+        /* Tombol Like & Komentar */
+        .interaction-bar { margin-top: 25px; display: flex; align-items: center; gap: 15px; border-top: 1px solid #e1e8ed; padding-top: 15px; }
+        .like-btn { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; padding: 7px 14px; font-weight: bold; cursor: pointer; border-radius: 3px; font-size: 12px; }
+        .like-btn:hover { background: #fecaca; }
+        .like-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .comments-section { background-color: #ffffff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 20px; margin-top: 20px; }
+        .comment-form input, .comment-form textarea { width: 100%; padding: 8px; border: 1px solid #b8c7d9; border-radius: 2px; margin-bottom: 10px; font-size: 12px; font-family: inherit; }
+        .comment-form textarea { min-height: 90px; }
+        .btn-submit { background-color: #1b365d; color: #ffffff; border: none; padding: 7px 15px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+        .btn-submit:hover { background-color: #2c4d75; }
+        
+        .comment-item { border-top: 1px solid #e1e8ed; padding: 12px 0; margin-top: 10px; }
+        .comment-author { font-weight: bold; font-size: 12px; color: #1b365d; }
+        .comment-date { font-size: 11px; color: #666666; margin-left: 6px; }
+        .reply-btn { background: none; border: none; color: #004280; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; margin-top: 5px; }
+        .replies-list { margin-left: 20px; padding-left: 10px; border-left: 2px solid #b8c7d9; margin-top: 8px; }
+
+        .site-footer { background-color: #1b365d; color: #d8e2ec; padding: 20px 0; border-top: 3px solid #c59b27; font-size: 12px; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+        @media (max-width: 768px) {
+            .nav-links { flex-direction: column; }
+            .nav-links li { border-right: none; border-bottom: 1px solid #1b365d; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="site-wrapper">
+        <div class="top-bar">
+            <div class="container top-bar-content">
+                <div>PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div>
+            </div>
+        </div>
+
+        <header class="masthead">
+            <div class="container masthead-inner">
+                <div class="journal-title">
+                    <h1><a href="/index.html">FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</a></h1>
+                    <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
+                    <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="navbar">
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="/index.html">[Indeks Naskah]</a></li>
+                    <li><a href="/pedoman-penulisan.html">[Pedoman Penulisan]</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="breadcrumb-bar">
+            <div class="container">
+                Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="/index.html">Arsip Terbitan</a> &raquo; <b>Subjektivitas Marx dan Eksistensialisme Sartre</b>
+            </div>
+        </div>
+
+        <div class="container main-body">
+            <div class="col-main">
+                <div class="section-header">:: Detail Naskah &amp; Kajian</div>
+
+                <article class="article-item">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: 16 November 2026</span>
+                        <span class="tag-kategori">Filsafat & Epistemologi</span>
+                    </div>
+
+                    <h1 class="article-title">Subjektivitas Marx dan Eksistensialisme Sartre</h1>
+                    <div class="article-meta">Oleh: <b>Tim Redaksi FKKI</b></div>
+                    <div class="article-abstract"><p>Dalam sejarah pemikiran modern, perdebatan mengenai hakikat kebebasan manusia sering kali terbelah ke dalam dua kubu besar yang tampak bertolak belakang: determinisme struktural di satu sisi, dan kebebasan radikal eksistensial di sisi lainnya. Karl Marx, dengan materialisme historisnya, memandang manusia sebagai produk dari relasi sosial dan struktur ekonomi tempat ia hidup; kesadaran tidak menentukan eksistensi, melainkan eksistensi sosiallah yang menentukan kesadaran. Sebaliknya, Jean-Paul Sartre, sebagai motor utama eksistensialisme Prancis, mendeklarasikan bahwa eksistensi mendahului esensi, di mana manusia dikutuk untuk bebas dan bertanggung jawab penuh atas segala tindakannya. Meski pada pandangan pertama keduanya tampak berlawanan—yang satu mereduksi manusia ke dalam kelas sosial dan pabrik kapitalisme, sementara yang lain mengangkat manusia sebagai arsitek mutlak bagi nasibnya sendiri—perjumpaan antara Marxisme dan eksistensialisme Sartre justru menawarkan sintesis teoretis yang sangat mendalam mengenai pencarian subjektivitas manusia modern.</p><p>Sartre sendiri menyadari ketegangan ini dan mendedikasikan tahun-tahun kemudian dalam intelektualismenya untuk mencoba "mengawinkan" eksistensialisme dengan Marxisme. Bagi Sartre, Marxisme adalah satu-satunya filsafat hidup yang tidak dapat diatasi untuk zamannya karena ia memberikan analisis materialistis yang paling akurat tentang bagaimana kapitalisme mencengkeram sejarah manusia. Namun, Sartre merasa Marxisme ortodoks sering kali mengabaikan dimensi subjektivitas, agensi individu, dan pengalaman batin yang hidup—sebuah titik buta yang membuat Marxisme kerap jatuh ke dalam dogmatisme mekanis. Di sinilah eksistensialisme masuk sebagai pelengkap yang krusial: ia memberikan kerangka untuk memahami bagaimana manusia, meskipun dibatasi oleh struktur kelas dan kondisi material yang menindas, tetap memiliki ruang kesadaran untuk bertindak, memilih, dan memberontak.</p><p>Titik temu paling radikal antara subjektivitas Marxian dan Sartreian terletak pada konsep alienasi dan praksis. Dalam pandangan Marx, alienasi terjadi ketika pekerja terasing dari produk kerjanya, proses kerjanya, sesama manusia, dan hakikat kemanusiaannya akibat cengkeraman sistem komoditas. Sartre menerjemahkan alienasi ini melalui kacamata kesadaran dan kebebasan yang terhalang. Manusia mengalami bad faith (iktikad buruk) ketika ia membiarkan dirinya direduksi semata-mata sebagai objek di dalam sistem—menerima begitu saja nasibnya sebagai roda gigi yang dapat diganti di dalam mesin kapitalisme. Melalui konsep praksis, Sartre menjembatani keduanya: praksis adalah tindakan sadar manusia yang mengubah kondisi materialnya sekaligus mengubah dirinya sendiri. Manusia bukan sekadar boneka yang digerakkan oleh struktur sejarah, melainkan subjek yang membuat sejarah, meskipun di dalam kondisi yang tidak sepenuhnya ia pilih.</p><p>Sintesis antara Marx dan Sartre ini juga membongkar ilusi meritokrasi dan individualisme radikal yang sering digaungkan oleh ideologi liberal. Sartre sering menekankan bahwa kebebasan kita selalu terkondisikan oleh situasi (situated freedom). Seorang buruh pabrik yang miskin memiliki kebebasan eksistensial, tetapi kebebasan tersebut dibatasi oleh kenyataan material berupa kemiskinan, jam kerja yang panjang, dan ketimpangan kelas yang dianalisis oleh Marx. Oleh karena itu, kebebasan sejati menurut Sartre tidak bisa dicapai secara solipsistik atau individual semata; ia menuntut pembebasan kolektif. Membebaskan diri berarti mengubah struktur material yang menindas, karena eksistensi manusia tidak akan pernah merdeka sepenuhnya selama subordinasi kelas dan eksploitasi ekonomi masih mencengkeram masyarakat.</p><p>Membaca subjektivitas melalui lensa Marx dan Sartre mengajarkan kita bahwa manusia modern hidup dalam tarikan ketegangan yang konstan antara determinasi struktur dan kebebasan kehendak. Kita dibentuk oleh sejarah, sistem ekonomi, dan relasi kuasa yang berada di luar kendali kita, tetapi di saat yang sama, kita memiliki kapasitas kesadaran untuk menolak, menggugat, dan menciptakannya kembali. Subjektivitas bukanlah sesuatu yang given atau statis, melainkan sebuah perjuangan terus-menerus—sebuah praksis hidup di mana manusia menolak tunduk pada alienasi, meruntuhkan batasan material yang mengekang, dan merebut kembali kedaulatan atas dirinya sendiri.</p></div>
+
+                    <div class="interaction-bar">
+                        <button class="like-btn" id="likeBtn" onclick="handleLike()">Sukai Naskah Ini (<span id="likeCount">0</span>)</button>
+                    </div>
+                </article>
+
+                <section class="comments-section">
+                    <div class="section-header" style="margin-bottom: 15px;">:: Tanggapan &amp; Sanggahan Pembaca</div>
+                    <div class="comment-form">
+                        <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
+                        <textarea id="c-text" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
+                        <button class="btn-submit" id="submitCommentBtn" onclick="addComment()">Kirim Tanggapan</button>
+                    </div>
+                    <div id="comments-list"><p style="font-size:12px; color:#666;">Memuat tanggapan...</p></div>
+                </section>
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <div class="container footer-content">
+                <div>
+                    <b>FKKI — Forum Kajian &amp; Kritik Independen</b><br>
+                    <span style="font-size: 11px; color: #a1b5cc;">Repositori Terbuka dan Independen.</span>
+                </div>
+                <div style="text-align: right; font-size: 11px;">
+                    Lisensi Publikasi Terbuka &middot; <span style="color: #ffdf73; font-weight: bold;">Nalaroid</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        const SLUG = 'subjektivitas-marx-dan-eksistensialisme-sartre';
+        const BIN_ID = '6afaf531ac6210605a8bbfca';
+        const API_KEY = '$2a$10$4w2RV1J/BXb4Lqg06V/Nx.3OaNi2Qk5GKWP/JU3O1dE1BY4kHXuxy';
+        let fullCloudData = {};
+
+        async function fetchCloud() {
+            if (BIN_ID === 'MASUKKAN_BIN_ID_ANDA') {
+                renderCommentsUI([]);
+                return;
+            }
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    fullCloudData = data.record || {};
+                    const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+                    document.getElementById('likeCount').innerText = postData.likes || 0;
+                    renderCommentsUI(postData.comments || []);
+                }
+            } catch (e) {}
+        }
+
+        async function saveCloud(updatedPostData) {
+            if (BIN_ID === 'MASUKKAN_BIN_ID_ANDA') return alert('Admin belum mengatur JSONBin API Key.');
+            fullCloudData[SLUG] = updatedPostData;
+            await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': API_KEY
+                },
+                body: JSON.stringify(fullCloudData)
+            });
+        }
+
+        async function handleLike() {
+            const btn = document.getElementById('likeBtn');
+            btn.disabled = true;
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            postData.likes = (postData.likes || 0) + 1;
+            document.getElementById('likeCount').innerText = postData.likes;
+            await saveCloud(postData);
+            btn.disabled = false;
+        }
+
+        async function addComment() {
+            const name = document.getElementById('c-name').value.trim();
+            const text = document.getElementById('c-text').value.trim();
+            if (!name || !text) return alert('Nama dan isi tanggapan wajib diisi.');
+
+            const btn = document.getElementById('submitCommentBtn');
+            btn.disabled = true;
+            btn.innerText = 'Mengirim...';
+
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            if (!postData.comments) postData.comments = [];
+            postData.comments.push({
+                id: Date.now(),
+                name,
+                text,
+                date: new Date().toLocaleDateString('id-ID'),
+                replies: []
+            });
+
+            await saveCloud(postData);
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-text').value = '';
+            renderCommentsUI(postData.comments);
+            btn.disabled = false;
+            btn.innerText = 'Kirim Tanggapan';
+        }
+
+        function toggleReplyBox(id) {
+            const box = document.getElementById('reply-box-' + id);
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        async function addReply(commentId) {
+            const name = document.getElementById('r-name-' + commentId).value.trim();
+            const text = document.getElementById('r-text-' + commentId).value.trim();
+            if (!name || !text) return alert('Nama dan balasan wajib diisi.');
+
+            const postData = fullCloudData[SLUG] || { likes: 0, comments: [] };
+            const target = (postData.comments || []).find(c => c.id === commentId);
+            if (target) {
+                if (!target.replies) target.replies = [];
+                target.replies.push({ name, text, date: new Date().toLocaleDateString('id-ID') });
+                await saveCloud(postData);
+                renderCommentsUI(postData.comments);
+            }
+        }
+
+        function renderCommentsUI(comments) {
+            const container = document.getElementById('comments-list');
+            if (!comments || comments.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:#666; font-style:italic; margin-top:10px;">Belum ada tanggapan pada naskah ini.</p>';
+                return;
+            }
+
+            container.innerHTML = comments.map(c => `
+                <div class="comment-item">
+                    <div>
+                        <span class="comment-author">${c.name}</span>
+                        <span class="comment-date">(${c.date})</span>
+                    </div>
+                    <p style="margin: 5px 0 8px 0; font-size: 13px;">${c.text}</p>
+                    <button class="reply-btn" onclick="toggleReplyBox(${c.id})">[Balas Tanggapan Ini]</button>
+
+                    <div id="reply-box-${c.id}" style="display:none; margin-top:8px;" class="comment-form">
+                        <input type="text" id="r-name-${c.id}" placeholder="Nama Anda...">
+                        <textarea id="r-text-${c.id}" placeholder="Tulis balasan..."></textarea>
+                        <button class="btn-submit" onclick="addReply(${c.id})">Kirim Balasan</button>
+                    </div>
+
+                    <div class="replies-list">
+                        ${(c.replies || []).map(r => `
+                            <div style="margin-bottom: 6px; font-size: 12px;">
+                                <span class="comment-author">${r.name}</span>
+                                <span class="comment-date">(${r.date})</span>
+                                <p style="margin: 3px 0;">${r.text}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        fetchCloud();
+    </script>
+</body>
+</html>
