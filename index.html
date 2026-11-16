@@ -226,7 +226,7 @@
         let cloudInteractions = {};
 
         async function loadCloudInteractions() {
-            if (JSONBIN_BIN_ID === 'MASUKKAN_BIN_ID_ANDA') return;
+            if (JSONBIN_BIN_ID === '6afaf531ac6210605a8bbfca') return;
             try {
                 const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
                     headers: { 'X-Master-Key': JSONBIN_API_KEY }
