@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FKKI — Forum Kajian &amp; Kritik Independen [Repositori Digital]</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f0f2f5; color: #222222;
+            font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5;
+        }
+        a:link { color: #004280; text-decoration: none; }
+        a:visited { color: #551a8b; }
+        a:hover { color: #0066cc; text-decoration: underline; }
+
+        .site-wrapper { width: 100%; background-color: #ffffff; border-bottom: 1px solid #cccccc; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .container { width: 94%; max-width: 1200px; margin: 0 auto; }
+
+        .top-bar { background-color: #1b2838; color: #b0c4de; font-size: 11px; padding: 6px 0; border-bottom: 1px solid #101a24; }
+        .top-bar-content { display: flex; justify-content: space-between; align-items: center; }
+
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
+        .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .journal-title h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
+        .journal-issn { margin-top: 10px; font-family: 'Courier New', monospace; font-size: 11px; color: #ffdf73; letter-spacing: 1px; }
+
+        .navbar { background-color: #2c4d75; border-bottom: 1px solid #1b365d; padding: 0; }
+        .nav-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; }
+        .nav-links li { border-right: 1px solid #1b365d; }
+        .nav-links a { display: block; color: #ffffff; padding: 10px 16px; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .nav-links a:hover { background-color: #1b365d; text-decoration: none; color: #ffdf73; }
+
+        .breadcrumb-bar { background-color: #f7f9fa; border-bottom: 1px solid #e1e8ed; padding: 8px 0; font-size: 11px; color: #555555; }
+
+        .main-body { padding: 25px 0; }
+        .content-grid { display: flex; gap: 30px; flex-wrap: wrap; }
+        .col-main { flex: 3; min-width: 300px; }
+        .col-sidebar { flex: 1.2; min-width: 260px; }
+
+        .section-header {
+            background: linear-gradient(to bottom, #eef2f7, #d8e1eb);
+            border-top: 2px solid #1b365d; border-bottom: 1px solid #b8c7d9;
+            color: #1b365d; font-size: 12px; font-weight: bold; padding: 6px 10px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+
+        .article-item {
+            background-color: #ffffff; border: 1px solid #e1e8ed; border-radius: 3px; padding: 18px; margin-bottom: 20px;
+        }
+        .tag-kategori {
+            background-color: #eef2f7; border: 1px solid #b8c7d9; color: #1b365d;
+            font-family: 'Courier New', monospace; font-size: 10px; font-weight: bold; padding: 2px 6px; border-radius: 2px;
+        }
+        .article-title { font-family: Georgia, serif; font-size: 18px; margin: 8px 0; line-height: 1.35; }
+        .article-meta { font-size: 12px; color: #555555; margin-bottom: 10px; }
+        .article-abstract { font-size: 13.5px; line-height: 1.6; color: #333333; margin-bottom: 12px; text-align: justify; }
+        .article-footer-links {
+            background-color: #f8f9fa; border-top: 1px dashed #d8e2ec; padding: 8px 10px; font-size: 11px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px;
+        }
+
+        .empty-state {
+            background-color: #fff; border: 1px dashed #b8c7d9; padding: 30px; text-align: center; color: #666; font-size: 13px; border-radius: 3px;
+        }
+
+        .sidebar-widget { background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 3px; margin-bottom: 20px; overflow: hidden; }
+        .sidebar-widget-content { padding: 12px; font-size: 12.5px; }
+        .search-form input[type="text"] { width: 100%; padding: 6px; border: 1px solid #b8c7d9; border-radius: 2px; margin-bottom: 8px; font-size: 12px; }
+        .search-form input[type="submit"] { background-color: #1b365d; color: #ffffff; border: none; padding: 5px 12px; font-size: 11px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+        .category-list { list-style-type: square; padding-left: 18px; margin: 0; line-height: 1.8; color: #1b365d; }
+
+        .pagination {
+            background-color: #eef2f7; border: 1px solid #b8c7d9; padding: 10px; text-align: center; font-size: 12px; border-radius: 3px; margin-top: 25px;
+        }
+        .pagination a, .pagination span { padding: 2px 6px; margin: 0 2px; border: 1px solid #b8c7d9; background: #fff; cursor: pointer; }
+        .pagination span.active { background: #1b365d; color: #fff; font-weight: bold; }
+
+        .site-footer { background-color: #1b365d; color: #d8e2ec; padding: 20px 0; border-top: 3px solid #c59b27; font-size: 12px; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+
+        @media (max-width: 768px) {
+            .content-grid { flex-direction: column; }
+            .masthead-inner { flex-direction: column; align-items: flex-start; }
+            .nav-links { flex-direction: column; }
+            .nav-links li { border-right: none; border-bottom: 1px solid #1b365d; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="site-wrapper">
+        <div class="top-bar">
+            <div class="container top-bar-content">
+                <div>PORTAL REPOSITORI WACANA &amp; PUBLIKASI INDEPENDEN</div>
+            </div>
+        </div>
+
+        <header class="masthead">
+            <div class="container masthead-inner">
+                <div class="journal-title">
+                    <h1>FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</h1>
+                    <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
+                    <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
+                </div>
+            </div>
+        </header>
+
+        <nav class="navbar">
+            <div class="container">
+                <ul class="nav-links">
+                    <li><a href="index.html">[Indeks Naskah]</a></li>
+                    <li><a href="admin.html">[Panel Redaksi]</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="breadcrumb-bar">
+            <div class="container">
+                Lokasi: <a href="index.html">Beranda</a> &raquo; <a href="#">Arsip Terbitan</a> &raquo; <b>Daftar Naskah Terbaru</b>
+            </div>
+        </div>
+
+        <div class="container main-body">
+            <div class="content-grid">
+                
+                <!-- KOLOM KIRI: DAFTAR NASKAH DINAMIS -->
+                <main class="col-main">
+                    <div class="section-header">
+                        :: Daftar Naskah &amp; Kajian Terbaru
+                    </div>
+
+                    <div id="articleContainer">
+                        <div class="empty-state">
+                            Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.
+                        </div>
+                    </div>
+
+                    <div id="paginationContainer" style="display: none;"></div>
+                </main>
+
+                <!-- KOLOM KANAN: SIDEBAR WIDGETS -->
+                <aside class="col-sidebar">
+                    <div class="sidebar-widget">
+                        <div class="section-header" style="margin-bottom: 0;">:: Pencarian Arsip</div>
+                        <div class="sidebar-widget-content">
+                            <form action="#" method="get" class="search-form">
+                                <label style="font-size: 11px; color: #555;">Kata kunci / Penulis:</label>
+                                <input type="text" name="q" placeholder="Cari naskah...">
+                                <input type="submit" value="Cari">
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget" style="border-color: #c59b27;">
+                        <div style="background-color: #c59b27; color: #ffffff; font-weight: bold; font-size: 11px; padding: 6px 10px; text-transform: uppercase;">
+                            :: Pengiriman Naskah
+                        </div>
+                        <div class="sidebar-widget-content" style="background-color: #fdfcf7;">
+                            <p style="margin-top: 0; font-size: 12.5px; line-height: 1.45;">
+                                FKKI menerima esai kritis, tinjauan buku, dan sanggahan terbuka. Kirimkan naskah Anda ke surel redaksi:
+                            </p>
+                            <div style="background-color: #ffffff; border: 1px dashed #c59b27; padding: 6px; text-align: center; font-family: Courier New, monospace; font-size: 11px; color: #b22222; font-weight: bold;">
+                                rayannathaniel@gmail.com
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <div class="section-header" style="margin-bottom: 0;">:: Statistik Repositori</div>
+                        <div class="sidebar-widget-content" style="padding: 0;">
+                            <table width="100%" cellpadding="6" cellspacing="0" border="0" style="font-size: 11.5px; font-family: Courier New, monospace;">
+                                <tr style="border-bottom: 1px solid #eee;">
+                                    <td>Total Naskah</td>
+                                    <td align="right"><b id="statTotal">0</b></td>
+                                </tr>
+                                <tr>
+                                    <td>Akses Halaman</td>
+                                    <td align="right"><b>000,001</b></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+
+        <footer class="site-footer">
+            <div class="container footer-content">
+                <div>
+                    <b>FKKI — Forum Kajian &amp; Kritik Independen</b><br>
+                    <span style="font-size: 11px; color: #a1b5cc;">Repositori Terbuka dan Independen.</span>
+                </div>
+                <div style="text-align: right; font-size: 11px;">
+                    Lisensi Publikasi Terbuka &middot; <span style="color: #ffdf73; font-weight: bold;">Nalaroid</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let articlesPerPage = 3;
+        let currentPage = 1;
+        let allArticles = [];
+
+        async function loadArticles() {
+            try {
+                let response = await fetch('/posts.json?' + new Date().getTime());
+                if (!response.ok) return;
+                allArticles = await response.json();
+                allArticles.reverse();
+                
+                document.getElementById('statTotal').innerText = allArticles.length;
+                renderPage(currentPage);
+            } catch (err) {}
+        }
+
+        function renderPage(page) {
+            let container = document.getElementById('articleContainer');
+            let pagingContainer = document.getElementById('paginationContainer');
+            
+            if (allArticles.length === 0) {
+                container.innerHTML = `<div class="empty-state">Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.</div>`;
+                pagingContainer.style.display = 'none';
+                return;
+            }
+
+            let start = (page - 1) * articlesPerPage;
+            let end = start + articlesPerPage;
+            let paginatedItems = allArticles.slice(start, end);
+
+            let html = '';
+            paginatedItems.forEach(art => {
+                html += `
+                    <article class="article-item">
+                        <span class="tag-kategori">Kajian &amp; Kritik</span> &nbsp;
+                        <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${art.date}</span>
+                        <h2 class="article-title"><a href="/pages/${art.slug}.html">${art.title}</a></h2>
+                        <div class="article-meta">Oleh: <b>${art.author}</b></div>
+                        <p class="article-abstract">${art.excerpt}</p>
+                        <div class="article-footer-links">
+                            <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
+                            <div style="color: #444444;">Tanggapan / Sanggahan: <b>(0)</b></div>
+                        </div>
+                    </article>
+                `;
+            });
+            container.innerHTML = html;
+
+            let totalPages = Math.ceil(allArticles.length / articlesPerPage);
+            if (totalPages > 1) {
+                let pagingHtml = `<div class="pagination">Halaman <b>${page}</b> dari ${totalPages} &nbsp;&mdash;&nbsp; `;
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === page) {
+                        pagingHtml += `<span class="active">[${i}]</span>`;
+                    } else {
+                        pagingHtml += `<a onclick="changePage(${i})">[${i}]</a>`;
+                    }
+                }
+                pagingHtml += `</div>`;
+                pagingContainer.innerHTML = pagingHtml;
+                pagingContainer.style.display = 'block';
+            } else {
+                pagingContainer.style.display = 'none';
+            }
+        }
+
+        function changePage(p) {
+            currentPage = p;
+            renderPage(currentPage);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        window.onload = loadArticles;
+    </script>
+</body>
+</html>

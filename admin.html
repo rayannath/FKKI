@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Redaksi — FKKI Admin</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background-color: #f0f2f5; color: #222222;
+            font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.5;
+        }
+        a:link { color: #004280; text-decoration: none; }
+        .site-wrapper { width: 100%; background-color: #ffffff; border-bottom: 1px solid #cccccc; }
+        .container { width: 94%; max-width: 1000px; margin: 0 auto; padding: 20px 0; }
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 20px 0; border-bottom: 3px solid #c59b27; }
+        .masthead h1 { font-family: Georgia, serif; font-size: 22px; margin: 0; }
+        
+        .admin-box { background: #fff; border: 1px solid #cbd5e1; border-radius: 3px; padding: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 12px; color: #1b365d; text-transform: uppercase; }
+        .form-group input, .form-group textarea { width: 100%; padding: 8px; border: 1px solid #b8c7d9; font-size: 13px; font-family: inherit; }
+        .form-group textarea { min-height: 250px; font-family: Georgia, serif; }
+        
+        .btn { background-color: #1b365d; color: #fff; border: none; padding: 8px 16px; font-size: 12px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+        .btn:hover { background-color: #2c4d75; }
+        .btn-danger { background-color: #b22222; }
+        .btn-danger:hover { background-color: #8b0000; }
+
+        .crud-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+        .crud-table th, .crud-table td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        .crud-table th { background-color: #eef2f7; color: #1b365d; }
+        
+        .status-msg { padding: 10px; margin-bottom: 15px; background: #eef6ee; border-left: 4px solid #2e7d32; font-size: 12px; display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="site-wrapper">
+        <header class="masthead">
+            <div class="container">
+                <h1>FKKI — PANEL ADMINISTRASI &amp; REDAKSI</h1>
+            </div>
+        </header>
+
+        <div class="container">
+            
+            <!-- FORM LOGIN / OTORISASI GITHUB -->
+            <div id="auth-section" class="admin-box">
+                <h3 style="margin-top: 0; color: #1b365d; font-size: 14px;">:: Otorisasi GitHub Repository</h3>
+                <p style="font-size: 12px; color: #555;">Masukkan kredensial akun GitHub Anda agar admin panel dapat melakukan CRUD langsung ke repositori secara otomatis.</p>
+                <div class="form-group">
+                    <label>Username GitHub (Owner)</label>
+                    <input type="text" id="gh-owner" placeholder="contoh: rayan-dev">
+                </div>
+                <div class="form-group">
+                    <label>Nama Repositori</label>
+                    <input type="text" id="gh-repo" placeholder="contoh: fkki-web">
+                </div>
+                <div class="form-group">
+                    <label>GitHub Personal Access Token (PAT)</label>
+                    <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                </div>
+                <button class="btn" onclick="saveAuth()">Masuk ke Panel Admin</button>
+            </div>
+
+            <!-- DASHBOARD CRUD & EDITOR -->
+            <div id="dashboard-section" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: #eef2f7; padding: 10px; border: 1px solid #b8c7d9;">
+                    <span style="font-size: 12px; font-weight: bold; color: #1b365d;">Status: Terhubung ke GitHub API</span>
+                    <button class="btn btn-danger" onclick="logout()">Keluar Sesi</button>
+                </div>
+
+                <div id="status-banner" class="status-msg"></div>
+
+                <div class="admin-box">
+                    <h3 id="form-mode-label" style="margin-top: 0; color: #1b365d; font-size: 14px;">:: Publikasi Naskah Baru</h3>
+                    <input type="hidden" id="edit-slug" value="">
+                    
+                    <div class="form-group">
+                        <label>Judul Naskah</label>
+                        <input type="text" id="post-title" placeholder="Masukkan judul kajian atau kritik...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Nama Penulis / Redaksi</label>
+                        <input type="text" id="post-author" value="Tim Redaksi FKKI">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Isi Tulisan / Naskah</label>
+                        <textarea id="post-content" placeholder="Tuliskan gagasan, kajian, atau kritik secara bebas di sini..."></textarea>
+                    </div>
+
+                    <button class="btn" id="publish-btn" onclick="publishPost()">Publikasikan ke GitHub</button>
+                    <button class="btn" id="cancel-edit-btn" style="display:none; background:#666;" onclick="resetForm()">Batal Edit</button>
+                </div>
+
+                <div class="admin-box">
+                    <h3 style="margin-top: 0; color: #1b365d; font-size: 14px;">:: Daftar Naskah Terpublikasi (CRUD)</h3>
+                    <table class="crud-table">
+                        <thead>
+                            <tr>
+                                <th>Judul Naskah</th>
+                                <th>Tanggal</th>
+                                <th>File Target</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-post-list">
+                            <tr><td colspan="4">Memuat data dari repositori...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toBase64(str) { return btoa(unescape(encodeURIComponent(str))); }
+        function fromBase64(str) { return decodeURIComponent(escape(atob(str))); }
+
+        function slugify(text) {
+            return text.toString().toLowerCase()
+                .replace(/\s+/g, '-')
+                .replace(/[^\w\-]+/g, '')
+                .replace(/\-\-+/g, '-')
+                .replace(/^-+/, '').replace(/-+$/, '');
+        }
+
+        function showStatus(msg, isErr = false) {
+            const banner = document.getElementById('status-banner');
+            banner.style.display = 'block';
+            banner.style.background = isErr ? '#fdecea' : '#eef6ee';
+            banner.style.borderLeftColor = isErr ? '#b22222' : '#2e7d32';
+            banner.innerText = msg;
+        }
+
+        function saveAuth() {
+            const owner = document.getElementById('gh-owner').value.trim();
+            const repo = document.getElementById('gh-repo').value.trim();
+            const token = document.getElementById('gh-token').value.trim();
+            if (!owner || !repo || !token) return alert('Lengkapi semua kolom!');
+            localStorage.setItem('fkki_owner', owner);
+            localStorage.setItem('fkki_repo', repo);
+            localStorage.setItem('fkki_token', token);
+            checkAuth();
+        }
+
+        function logout() {
+            localStorage.removeItem('fkki_owner');
+            localStorage.removeItem('fkki_repo');
+            localStorage.removeItem('fkki_token');
+            location.reload();
+        }
+
+        function checkAuth() {
+            if (localStorage.getItem('fkki_token')) {
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('dashboard-section').style.display = 'block';
+                loadAdminPosts();
+            }
+        }
+
+        async function ghReq(path, method = 'GET', body = null) {
+            const owner = localStorage.getItem('fkki_owner');
+            const repo = localStorage.getItem('fkki_repo');
+            const token = localStorage.getItem('fkki_token');
+            const res = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${path}`, {
+                method,
+                headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' },
+                ...(body && { body: JSON.stringify(body) })
+            });
+            if (!res.ok && res.status !== 404) {
+                const err = await res.json();
+                throw new Error(err.message || 'Gagal terhubung ke GitHub');
+            }
+            return res;
+        }
+
+        // Template Halaman Detail Artikel (judul-tulisan.html) Beserta Fitur Komentar & Balasan Ala Blog
+        function generateArticleHTML(post) {
+            const formattedContent = post.content.split('\n\n').map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+            return `<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${post.title} — FKKI</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { background-color: #f0f2f5; color: #222; font-family: Arial, Tahoma, sans-serif; margin: 0; padding: 0; line-height: 1.6; }
+        .container { width: 94%; max-width: 900px; margin: 0 auto; padding: 20px 0; }
+        .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #fff; padding: 20px 0; border-bottom: 3px solid #c59b27; text-align: center; }
+        .masthead h1 a { color: #fff; text-decoration: none; font-family: Georgia, serif; }
+        .article-box { background: #fff; border: 1px solid #e1e8ed; padding: 30px; margin-top: 20px; border-radius: 3px; }
+        .article-title { font-family: Georgia, serif; font-size: 24px; color: #1b365d; margin-bottom: 10px; }
+        .meta { font-size: 12px; color: #666; border-bottom: 1px dashed #d8e2ec; padding-bottom: 10px; margin-bottom: 20px; }
+        .content { font-family: Georgia, serif; font-size: 15px; color: #222; text-align: justify; }
+        .content p { margin-bottom: 15px; }
+        
+        /* Komentar & Balasan */
+        .comments-section { background: #fff; border: 1px solid #e1e8ed; padding: 25px; margin-top: 20px; border-radius: 3px; }
+        .comment-form input, .comment-form textarea { width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #b8c7d9; font-family: inherit; font-size: 12px; }
+        .btn { background-color: #1b365d; color: #fff; border: none; padding: 6px 14px; font-size: 11px; font-weight: bold; cursor: pointer; }
+        .comment-item { border-top: 1px solid #e1e8ed; padding: 12px 0; margin-top: 10px; }
+        .comment-author { font-weight: bold; font-size: 12px; color: #1b365d; }
+        .comment-date { font-size: 11px; color: #777; margin-left: 5px; }
+        .reply-btn { background: none; border: none; color: #004280; font-size: 11px; cursor: pointer; padding: 0; text-decoration: underline; margin-top: 5px; }
+        .replies-list { margin-left: 20px; padding-left: 10px; border-left: 2px solid #b8c7d9; margin-top: 8px; }
+    </style>
+</head>
+<body>
+    <header class="masthead">
+        <div class="container">
+            <h1><a href="/">FKKI — Forum Kajian &amp; Kritik Independen</a></h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <article class="article-box">
+            <span style="font-family: Courier New, monospace; font-size: 11px; color: #1b365d; font-weight: bold;">NASKAH PUBLIKASI</span>
+            <h1 class="article-title">${post.title}</h1>
+            <div class="meta">Dipublikasikan pada ${post.date} &bull; Oleh: <b>${post.author}</b></div>
+            <div class="content">
+                ${formattedContent}
+            </div>
+        </article>
+
+        <!-- FITUR KOMENTAR & BALASAN -->
+        <section class="comments-section">
+            <h3 style="margin-top: 0; font-size: 14px; color: #1b365d; text-transform: uppercase;">:: Tanggapan &amp; Sanggahan Pembaca</h3>
+            
+            <div class="comment-form">
+                <input type="text" id="c-name" placeholder="Nama / Afiliasi Anda...">
+                <textarea id="c-text" rows="3" placeholder="Tulis tanggapan atau kritik konstruktif..."></textarea>
+                <button class="btn" onclick="addComment()">Kirim Tanggapan</button>
+            </div>
+
+            <div id="comments-list"></div>
+        </section>
+    </div>
+
+    <script>
+        const PAGE_ID = 'fkki_comments_${post.slug}';
+
+        function getComments() { return JSON.parse(localStorage.getItem(PAGE_ID) || '[]'); }
+        function saveComments(data) { localStorage.setItem(PAGE_ID, JSON.stringify(data)); renderComments(); }
+
+        function addComment() {
+            const name = document.getElementById('c-name').value.trim();
+            const text = document.getElementById('c-text').value.trim();
+            if (!name || !text) return alert('Nama dan isi tanggapan wajib diisi.');
+
+            const comments = getComments();
+            comments.push({ id: Date.now(), name, text, date: new Date().toLocaleDateString('id-ID'), replies: [] });
+            document.getElementById('c-name').value = '';
+            document.getElementById('c-text').value = '';
+            saveComments(comments);
+        }
+
+        function toggleReplyBox(id) {
+            const box = document.getElementById('reply-box-' + id);
+            box.style.display = box.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function addReply(commentId) {
+            const name = document.getElementById('r-name-' + commentId).value.trim();
+            const text = document.getElementById('r-text-' + commentId).value.trim();
+            if (!name || !text) return alert('Nama dan balasan wajib diisi.');
+
+            const comments = getComments();
+            const target = comments.find(c => c.id === commentId);
+            if (target) {
+                target.replies.push({ name, text, date: new Date().toLocaleDateString('id-ID') });
+                saveComments(comments);
+            }
+        }
+
+        function renderComments() {
+            const comments = getComments();
+            const container = document.getElementById('comments-list');
+            if (comments.length === 0) {
+                container.innerHTML = '<p style="font-size:12px; color:#666; font-style:italic; margin-top:10px;">Belum ada tanggapan pada naskah ini.</p>';
+                return;
+            }
+
+            container.innerHTML = comments.map(c => \`
+                <div class="comment-item">
+                    <div>
+                        <span class="comment-author">\${c.name}</span>
+                        <span class="comment-date">(\${c.date})</span>
+                    </div>
+                    <p style="margin: 5px 0 8px 0; font-size: 13px;">\${c.text}</p>
+                    <button class="reply-btn" onclick="toggleReplyBox(\${c.id})">[Balas Tanggapan Ini]</button>
+
+                    <div id="reply-box-\${c.id}" style="display:none; margin-top:8px;" class="comment-form">
+                        <input type="text" id="r-name-\${c.id}" placeholder="Nama Anda...">
+                        <textarea id="r-text-\${c.id}" rows="2" placeholder="Tulis balasan..."></textarea>
+                        <button class="btn" onclick="addReply(\${c.id})">Kirim Balasan</button>
+                    </div>
+
+                    <div class="replies-list">
+                        \${c.replies.map(r => \`
+                            <div style="margin-bottom: 6px; font-size: 12px;">
+                                <span class="comment-author">\${r.name}</span>
+                                <span class="comment-date">(\${r.date})</span>
+                                <p style="margin: 3px 0;">\${r.text}</p>
+                            </div>
+                        \`).join('')}
+                    </div>
+                </div>
+            \`).join('');
+        }
+        renderComments();
+    <\/script>
+</body>
+</html>`;
+        }
+
+        async function publishPost() {
+            const title = document.getElementById('post-title').value.trim();
+            const author = document.getElementById('post-author').value.trim() || 'Tim Redaksi FKKI';
+            const content = document.getElementById('post-content').value.trim();
+            const editSlug = document.getElementById('edit-slug').value;
+
+            if (!title || !content) return alert('Judul dan isi naskah tidak boleh kosong!');
+
+            const btn = document.getElementById('publish-btn');
+            btn.disabled = true;
+            btn.innerText = 'Memproses ke GitHub...';
+
+            try {
+                const slug = editSlug || slugify(title);
+                const now = new Date();
+                const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                const excerpt = content.substring(0, 200) + (content.length > 200 ? '...' : '');
+
+                const postObj = { slug, title, author, date: dateStr, timestamp: now.toISOString(), excerpt, content };
+
+                // 1. Buat atau update file ke pages/{slug}.html (GitHub API otomatis membuat folder pages jika belum ada)
+                const pagePath = `pages/${slug}.html`;
+                let pageSha = null;
+                const pageRes = await ghReq(pagePath, 'GET');
+                if (pageRes.status === 200) {
+                    const pageData = await pageRes.json();
+                    pageSha = pageData.sha;
+                }
+
+                const htmlContent = generateArticleHTML(postObj);
+                await ghReq(pagePath, 'PUT', {
+                    message: `${editSlug ? 'Update' : 'Publikasi'} naskah: ${title}`,
+                    content: toBase64(htmlContent),
+                    ...(pageSha && { sha: pageSha })
+                });
+
+                // 2. Update posts.json di root repositori
+                let posts = [];
+                let postsSha = null;
+                const postsRes = await ghReq('posts.json', 'GET');
+                if (postsRes.status === 200) {
+                    const postsData = await postsRes.json();
+                    postsSha = postsData.sha;
+                    posts = JSON.parse(fromBase64(postsData.content));
+                }
+
+                const idx = posts.findIndex(p => p.slug === slug);
+                if (idx > -1) {
+                    postObj.date = posts[idx].date;
+                    postObj.timestamp = posts[idx].timestamp;
+                    posts[idx] = postObj;
+                } else {
+                    posts.push(postObj);
+                }
+
+                await ghReq('posts.json', 'PUT', {
+                    message: `Update posts.json indeks untuk: ${title}`,
+                    content: toBase64(JSON.stringify(posts, null, 2)),
+                    ...(postsSha && { sha: postsSha })
+                });
+
+                showStatus(`Sukses! Naskah berhasil dipublikasikan. Vercel akan otomatis memperbarui web dalam ~15 detik.`);
+                resetForm();
+                loadAdminPosts();
+            } catch (err) {
+                showStatus('Terjadi kesalahan: ' + err.message, true);
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'Publikasikan ke GitHub';
+            }
+        }
+
+        async function loadAdminPosts() {
+            const tbody = document.getElementById('admin-post-list');
+            try {
+                const res = await ghReq('posts.json', 'GET');
+                if (res.status === 404) {
+                    tbody.innerHTML = '<tr><td colspan="4">Belum ada naskah tersimpan di repositori.</td></tr>';
+                    return;
+                }
+                const data = await res.json();
+                const posts = JSON.parse(fromBase64(data.content));
+                posts.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                window.cachedPosts = posts;
+
+                tbody.innerHTML = posts.map(p => `
+                    <tr>
+                        <td><a href="/pages/${p.slug}.html" target="_blank" style="font-weight:bold;">${p.title}</a></td>
+                        <td>${p.date}</td>
+                        <td><code>pages/${p.slug}.html</code></td>
+                        <td>
+                            <button class="btn" style="padding:4px 8px; font-size:10px;" onclick="editPost('${p.slug}')">Edit</button>
+                            <button class="btn btn-danger" style="padding:4px 8px; font-size:10px;" onclick="deletePost('${p.slug}')">Hapus</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (err) {
+                tbody.innerHTML = `<tr><td colspan="4">Gagal memuat arsip: ${err.message}</td></tr>`;
+            }
+        }
+
+        function editPost(slug) {
+            const p = window.cachedPosts.find(x => x.slug === slug);
+            if (!p) return;
+            document.getElementById('form-mode-label').innerText = ':: Edit Naskah: ' + p.title;
+            document.getElementById('edit-slug').value = p.slug;
+            document.getElementById('post-title').value = p.title;
+            document.getElementById('post-author').value = p.author;
+            document.getElementById('post-content').value = p.content;
+            document.getElementById('publish-btn').innerText = 'Simpan Perubahan';
+            document.getElementById('cancel-edit-btn').style.display = 'inline-block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetForm() {
+            document.getElementById('form-mode-label').innerText = ':: Publikasi Naskah Baru';
+            document.getElementById('edit-slug').value = '';
+            document.getElementById('post-title').value = '';
+            document.getElementById('post-content').value = '';
+            document.getElementById('publish-btn').innerText = 'Publikasikan ke GitHub';
+            document.getElementById('cancel-edit-btn').style.display = 'none';
+        }
+
+        async function deletePost(slug) {
+            if (!confirm(`Yakin ingin menghapus naskah "${slug}" dari repositori secara permanen?`)) return;
+            showStatus('Menghapus naskah dari GitHub...');
+            try {
+                const pagePath = `pages/${slug}.html`;
+                const pRes = await ghReq(pagePath, 'GET');
+                if (pRes.status === 200) {
+                    const pData = await pRes.json();
+                    await ghReq(pagePath, 'DELETE', { message: `Hapus naskah ${slug}`, sha: pData.sha });
+                }
+
+                const postsRes = await ghReq('posts.json', 'GET');
+                if (postsRes.status === 200) {
+                    const postsData = await postsRes.json();
+                    let posts = JSON.parse(fromBase64(postsData.content));
+                    posts = posts.filter(x => x.slug !== slug);
+                    await ghReq('posts.json', 'PUT', {
+                        message: `Hapus indeks posts.json untuk: ${slug}`,
+                        content: toBase64(JSON.stringify(posts, null, 2)),
+                        sha: postsData.sha
+                    });
+                }
+                showStatus('Naskah berhasil dihapus.');
+                loadAdminPosts();
+            } catch (err) {
+                showStatus('Gagal menghapus: ' + err.message, true);
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
