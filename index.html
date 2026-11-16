@@ -23,6 +23,7 @@
         .masthead { background: linear-gradient(to bottom, #1b365d, #132744); color: #ffffff; padding: 25px 0; border-bottom: 3px solid #c59b27; }
         .masthead-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
         .journal-title h1 { font-family: Georgia, 'Times New Roman', serif; font-size: 26px; margin: 0 0 5px 0; letter-spacing: 0.5px; }
+        .journal-title h1 a { color: #ffffff; text-decoration: none; }
         .journal-title p { margin: 0; font-size: 14px; color: #d8e2ec; font-style: italic; }
         .journal-issn { margin-top: 10px; font-family: 'Courier New', monospace; font-size: 11px; color: #ffdf73; letter-spacing: 1px; }
 
@@ -98,7 +99,7 @@
         <header class="masthead">
             <div class="container masthead-inner">
                 <div class="journal-title">
-                    <h1>FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</h1>
+                    <h1><a href="/index.html">FKKI — FORUM KAJIAN &amp; KRITIK INDEPENDEN</a></h1>
                     <p>Repositori Wacana, Esai Kritis, dan Sanggahan Terbuka</p>
                     <div class="journal-issn">ARSIP TERBUKA (OPEN ACCESS)</div>
                 </div>
@@ -109,20 +110,21 @@
             <div class="container">
                 <ul class="nav-links">
                     <li><a href="/index.html">[Indeks Naskah]</a></li>
-                    <li><a href="/admin.html">[Panel Redaksi]</a></li>
+                    <li><a href="/pedoman-penulisan.html">[Pedoman Penulisan]</a></li>
                 </ul>
             </div>
         </nav>
 
         <div class="breadcrumb-bar">
             <div class="container">
-                Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="#">Arsip Terbitan</a> &raquo; <b>Daftar Naskah Terbaru</b>
+                Lokasi: <a href="/index.html">Beranda</a> &raquo; <a href="/index.html">Arsip Terbitan</a> &raquo; <b>Daftar Naskah Terbaru</b>
             </div>
         </div>
 
         <div class="container main-body">
             <div class="content-grid">
                 
+                <!-- KOLOM KIRI: DAFTAR NASKAH -->
                 <main class="col-main">
                     <div class="section-header">
                         :: Daftar Naskah &amp; Kajian Terbaru
@@ -130,22 +132,38 @@
 
                     <div id="articleContainer">
                         <div class="empty-state">
-                            Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.
+                            Memuat daftar naskah dari repositori...
                         </div>
                     </div>
 
                     <div id="paginationContainer" style="display: none;"></div>
                 </main>
 
+                <!-- KOLOM KANAN: SIDEBAR WIDGETS -->
                 <aside class="col-sidebar">
                     <div class="sidebar-widget">
                         <div class="section-header" style="margin-bottom: 0;">:: Pencarian Arsip</div>
                         <div class="sidebar-widget-content">
-                            <form action="#" method="get" class="search-form">
+                            <form onsubmit="searchPosts(event)" class="search-form">
                                 <label style="font-size: 11px; color: #555;">Kata kunci / Penulis:</label>
-                                <input type="text" name="q" placeholder="Cari naskah...">
+                                <input type="text" id="searchInput" placeholder="Cari naskah...">
                                 <input type="submit" value="Cari">
                             </form>
+                        </div>
+                    </div>
+
+                    <div class="sidebar-widget">
+                        <div class="section-header" style="margin-bottom: 0;">:: Indeks Bidang Kajian</div>
+                        <div class="sidebar-widget-content">
+                            <ul class="category-list" id="categoryFilterList">
+                                <li><a href="#" onclick="filterCategory('ALL'); return false;">Semua Bidang Kajian</a></li>
+                                <li><a href="#" onclick="filterCategory('Filsafat & Epistemologi'); return false;">Filsafat &amp; Epistemologi</a></li>
+                                <li><a href="#" onclick="filterCategory('Ekonomi Politik'); return false;">Ekonomi Politik</a></li>
+                                <li><a href="#" onclick="filterCategory('Sosiologi & Antropologi'); return false;">Sosiologi &amp; Antropologi</a></li>
+                                <li><a href="#" onclick="filterCategory('Sejarah & Historiografi'); return false;">Sejarah &amp; Historiografi</a></li>
+                                <li><a href="#" onclick="filterCategory('Kritik Sastra & Kebudayaan'); return false;">Kritik Sastra &amp; Kebudayaan</a></li>
+                                <li><a href="#" onclick="filterCategory('Sanggahan & Polemik'); return false;">Sanggahan &amp; Polemik</a></li>
+                            </ul>
                         </div>
                     </div>
 
@@ -172,8 +190,8 @@
                                     <td align="right"><b id="statTotal">0</b></td>
                                 </tr>
                                 <tr>
-                                    <td>Akses Halaman</td>
-                                    <td align="right"><b>000,001</b></td>
+                                    <td>Status Akses</td>
+                                    <td align="right"><b>OPEN ACCESS</b></td>
                                 </tr>
                             </table>
                         </div>
@@ -197,65 +215,113 @@
     </div>
 
     <script>
-        let articlesPerPage = 3;
+        // GANTI DENGAN DATA JSONBIN ANDA AGAR LIKE & KOMENTAR MUNCUL DI SEMUA HP
+        const JSONBIN_BIN_ID = 'MASUKKAN_BIN_ID_ANDA';
+        const JSONBIN_API_KEY = 'MASUKKAN_X_MASTER_KEY_ANDA';
+
+        let articlesPerPage = 5;
         let currentPage = 1;
         let allArticles = [];
-    
+        let filteredArticles = [];
+        let cloudInteractions = {};
+
+        async function loadCloudInteractions() {
+            if (JSONBIN_BIN_ID === 'MASUKKAN_BIN_ID_ANDA') return;
+            try {
+                const res = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
+                    headers: { 'X-Master-Key': JSONBIN_API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    cloudInteractions = data.record || {};
+                }
+            } catch (e) {}
+        }
+
         async function loadArticles() {
+            await loadCloudInteractions();
             try {
                 let response = await fetch('/posts.json?' + new Date().getTime());
-                if (!response.ok) return;
+                if (!response.ok) throw new Error('Kosong');
                 allArticles = await response.json();
-                allArticles.reverse();
+                allArticles.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                filteredArticles = [...allArticles];
                 
                 document.getElementById('statTotal').innerText = allArticles.length;
                 renderPage(currentPage);
-            } catch (err) {}
+            } catch (err) {
+                document.getElementById('articleContainer').innerHTML = `<div class="empty-state">Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.</div>`;
+            }
         }
-    
+
+        function filterCategory(cat) {
+            currentPage = 1;
+            if (cat === 'ALL') {
+                filteredArticles = [...allArticles];
+            } else {
+                filteredArticles = allArticles.filter(a => a.category === cat);
+            }
+            renderPage(currentPage);
+        }
+
+        function searchPosts(e) {
+            e.preventDefault();
+            const q = document.getElementById('searchInput').value.toLowerCase().trim();
+            currentPage = 1;
+            if (!q) {
+                filteredArticles = [...allArticles];
+            } else {
+                filteredArticles = allArticles.filter(a => 
+                    a.title.toLowerCase().includes(q) || a.author.toLowerCase().includes(q)
+                );
+            }
+            renderPage(currentPage);
+        }
+
         function renderPage(page) {
             let container = document.getElementById('articleContainer');
             let pagingContainer = document.getElementById('paginationContainer');
             
-            if (allArticles.length === 0) {
-                container.innerHTML = `<div class="empty-state">Belum ada naskah yang diarsipkan dalam repositori ini. Silakan nantikan terbitan perdana kami.</div>`;
+            if (filteredArticles.length === 0) {
+                container.innerHTML = `<div class="empty-state">Tidak ditemukan naskah yang sesuai dengan kriteria.</div>`;
                 pagingContainer.style.display = 'none';
                 return;
             }
-    
+
             let start = (page - 1) * articlesPerPage;
             let end = start + articlesPerPage;
-            let paginatedItems = allArticles.slice(start, end);
-    
+            let paginatedItems = filteredArticles.slice(start, end);
+
             let html = '';
             paginatedItems.forEach(art => {
-                // Ambil statistik real-time dari localStorage berdasarkan slug artikel
-                const stats = JSON.parse(localStorage.getItem('fkki_stats_' + art.slug) || '{"likes": 0, "comments": 0}');
-    
+                // Ambil jumlah like & komentar dari cloud (fallback ke localStorage jika offline)
+                const postInteract = cloudInteractions[art.slug] || { likes: 0, comments: [] };
+                let totalComments = (postInteract.comments || []).length;
+                (postInteract.comments || []).forEach(c => {
+                    if (c.replies) totalComments += c.replies.length;
+                });
+
                 html += `
                     <article class="article-item">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                             <span style="font-family: Courier New, monospace; font-size: 11px; color: #666;">Terbit: ${art.date}</span>
-                            <!-- KATEGORI DI SEBELAH KANAN -->
                             <span class="tag-kategori">${art.category || 'Kajian & Kritik'}</span>
                         </div>
-    
                         <h2 class="article-title"><a href="/pages/${art.slug}.html">${art.title}</a></h2>
                         <div class="article-meta">Oleh: <b>${art.author}</b></div>
                         <p class="article-abstract">${art.excerpt}</p>
-                        
                         <div class="article-footer-links">
                             <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
                             <div style="color: #444444; font-weight: bold;">
-                                ${stats.likes} Suka &nbsp;&bull;&nbsp; ${stats.comments} Tanggapan
+                                ❤️ ${postInteract.likes || 0} Suka &nbsp;&bull;&nbsp; 💬 ${totalComments} Tanggapan
                             </div>
                         </div>
                     </article>
                 `;
             });
             container.innerHTML = html;
-    
-            let totalPages = Math.ceil(allArticles.length / articlesPerPage);
+
+            let totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
             if (totalPages > 1) {
                 let pagingHtml = `<div class="pagination">Halaman <b>${page}</b> dari ${totalPages} &nbsp;&mdash;&nbsp; `;
                 for (let i = 1; i <= totalPages; i++) {
@@ -272,13 +338,13 @@
                 pagingContainer.style.display = 'none';
             }
         }
-    
+
         function changePage(p) {
             currentPage = p;
             renderPage(currentPage);
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-    
+
         window.onload = loadArticles;
     </script>
 </body>
