@@ -229,7 +229,6 @@
                 
                 document.getElementById('statTotal').innerText = allArticles.length;
 
-                // Ambil data like & komentar dari Google Sheets secara paralel agar cepat
                 await Promise.all(allArticles.map(async (art) => {
                     try {
                         let res = await fetch(`${SPREADSHEET_URL}?slug=${art.slug}`);
@@ -304,7 +303,7 @@
                         <div class="article-footer-links">
                             <div><a href="/pages/${art.slug}.html"><b>[Baca Naskah Lengkap]</b></a></div>
                             <div style="color: #444444; font-weight: bold;">
-                                ${st.likes} Suka &nbsp;&bull;&nbsp; ${st.comments} Tanggapan
+                                👍 ${st.likes} Suka &nbsp;&bull;&nbsp; 💬 ${st.comments} Tanggapan
                             </div>
                         </div>
                     </article>
